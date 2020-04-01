@@ -23,3 +23,55 @@ def draw_board(board):
      {} │ {} │ {} 
     """.format(*chars))
 
+
+def check_row(row, result_list):
+    """Gets result of row
+
+    Args:
+        row: 3-tuple
+        result_list: list of draw_counter, p1, p2.
+            List will be modified by this function.
+    """
+    if 3 in row:
+        result_list[0] += 1
+    elif 1 in row and 2 in row:
+        result_list[0] += 1
+    elif 0 in row:
+        pass
+    elif row[0] == 1:
+        result_list[1] = 1
+    else:  # row[0] == 2
+        result_list[2] = 1
+
+
+def get_result(board):
+    """Returns win/draw/loss result of board
+
+    Returns:
+        0: undecided
+        1: player 1 win
+        2: player 2 win
+        3: draw or illegal (both win)
+    """
+    result_list = [0, 0, 0]  # [draw_counter, p1, p2]
+
+    # Check rows
+    check_row(board[0:3], result_list)
+    check_row(board[3:6], result_list)
+    check_row(board[6:9], result_list)
+    # Check columns
+    check_row(board[0::3], result_list)
+    check_row(board[1::3], result_list)
+    check_row(board[2::3], result_list)
+    # Check diags
+    check_row(board[0::4], result_list)
+    check_row(board[2:7:2], result_list)
+
+    if result_list[0] == 8:
+        return 3
+    return result_list[1] + 2 * result_list[2]
+
+
+result_table = {bit: get_result(board)
+                for bit, board in bit2board_table.items()}
+
