@@ -43,3 +43,26 @@ def test_move_table():
     assert full_move_table[5][2][TEST_BIT] == hash((2, 1, 1, 0, 1, 3, 1, 2, 2))
     assert full_move_table[6][0][TEST_BIT] is None
 
+
+def test_legal_moves_table():
+    assert legal_moves_table[ZERO_BIT] == (1,) * 9
+    assert legal_moves_table[TEST_BIT2] == (1, 1, 0, 0, 0, 1, 1, 0, 0)
+    with pytest.raises(KeyError):
+        x = legal_moves_table[TEST_BIT]
+
+
+def test_get_legal_moves():
+    bb = BigBoard(sectors=[1, 4])
+    legal_moves = [ZERO_BOARD] * 9
+    legal_moves[1] = ONES_BOARD
+    legal_moves[4] = ONES_BOARD
+    assert bb.get_legal_moves() == legal_moves
+
+    legal_moves = [ONES_BOARD] * 9
+    legal_moves[5] = ZERO_BOARD
+    legal_moves[7] = (1, 1, 0, 0, 0, 1, 1, 0, 0)
+    bb = BigBoard(bits=(ZERO_BIT, ZERO_BIT, ZERO_BIT,
+                        ZERO_BIT, ZERO_BIT, TEST_BIT,
+                        ZERO_BIT, TEST_BIT2, ZERO_BIT))
+    assert bb.get_legal_moves() == legal_moves
+

@@ -9,8 +9,16 @@ decode_dict = {
 }
 bit2board_table = {hash(indices): indices
                    for indices in np.ndindex(*[4] * 9)}
-ZERO_BIT = hash((0,) * 9)
+
+ZERO_BOARD = (0,) * 9
+ONES_BOARD = (1,) * 9
+ZERO_BIT = hash(ZERO_BOARD)
+ONES_BIT = hash(ONES_BOARD)
+TWOS_BIT = hash((2,) * 9)
+DRAW_BIT = hash((3,) * 9)
+BIT_LIST = (ZERO_BIT, ONES_BIT, TWOS_BIT, DRAW_BIT)
 TEST_BIT = hash((2, 1, 1, 0, 1, 0, 1, 2, 2))
+TEST_BIT2 = hash((0, 0, 1, 2, 2, 0, 0, 1, 1))
 
 
 def draw_board(board):
@@ -78,6 +86,7 @@ result_table = {bit: get_result(board)
 
 def make_move_table(move_index):
     """Returns mapping of bits to bits after move"""
+    # Move tables can be trimmed significantly if illegal moves are removed
     table_1 = {}
     table_2 = {}
     table_3 = {}
@@ -100,20 +109,27 @@ def make_move_table(move_index):
 full_move_table = [make_move_table(i) for i in range(9)]
 
 
+legal_moves_table = {}
+for bit, board in bit2board_table.items():
+    result = result_table[bit]
+    if result == 0:
+        legal_moves_table[bit] = tuple(not board[i] for i in range(9))
+
+
 class BigBoard:
     """UTTT Board"""
-    def __init__(self, bits=None):
-        if not bits:
-            self.bits = [ZERO_BIT] * 9
-        else:
-            self.bits = bits
+    def __init__(self, bits=(ZERO_BIT,)*9, mover=0, sectors=tuple(range(9))):
+        self.bits = list(bits)
+        self.mover = mover
+        self.sectors = sectors
+        self.states = [result_table[b] for b in self.bits]
+        for i, state in enumerate(self.states):
+            if state != 0:
+                self.bits[i] = BIT_LIST[state]
 
     def draw(self):
+        """Draws 9x9 BigBoard"""
         boards = [bit2board_table[b] for b in self.bits]
-        states = [result_table[b] for b in self.bits]
-        for i, state in enumerate(states):
-            if state != 0:
-                boards[i] = (state, ) * 9
         chars = [[decode_dict[v] for v in board] for board in boards]
         rows = [chars[3*i][3*j:3*j+3] +
                 chars[3*i+1][3*j:3*j+3] +
@@ -138,3 +154,8 @@ class BigBoard:
         ───┼───┼───╋───┼───┼───╋───┼───┼───
          {} │ {} │ {} ┃ {} │ {} │ {} ┃ {} │ {} │ {}         
         """.format(*chars))
+
+    def get_legal_moves(self):
+        """Returns list of tuples of ones and zeros describing legal moves"""
+        return [ZERO_BOARD if i not in self.sectors or self.states[i]
+                else legal_moves_table[self.bits[i]] for i in range(9)]
