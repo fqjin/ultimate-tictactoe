@@ -1,0 +1,13 @@
+# Compiled
+__pycache__/
+*.pyc
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Pycharm
+.idea
+.git
+.venv
+
+# Project
