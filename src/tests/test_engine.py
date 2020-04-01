@@ -56,7 +56,7 @@ def test_get_legal_moves():
     legal_moves = [ZERO_BOARD] * 9
     legal_moves[1] = ONES_BOARD
     legal_moves[4] = ONES_BOARD
-    assert bb.get_legal_moves() == legal_moves
+    assert bb.legal_moves == legal_moves
 
     legal_moves = [ONES_BOARD] * 9
     legal_moves[5] = ZERO_BOARD
@@ -64,5 +64,5 @@ def test_get_legal_moves():
     bb = BigBoard(bits=(ZERO_BIT, ZERO_BIT, ZERO_BIT,
                         ZERO_BIT, ZERO_BIT, TEST_BIT,
                         ZERO_BIT, TEST_BIT2, ZERO_BIT))
-    assert bb.get_legal_moves() == legal_moves
+    assert bb.legal_moves == legal_moves
 

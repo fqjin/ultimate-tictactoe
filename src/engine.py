@@ -126,6 +126,7 @@ class BigBoard:
         for i, state in enumerate(self.states):
             if state != 0:
                 self.bits[i] = BIT_LIST[state]
+        self.legal_moves = self.get_legal_moves()
 
     def draw(self):
         """Draws 9x9 BigBoard"""
