@@ -75,3 +75,42 @@ def get_result(board):
 result_table = {bit: get_result(board)
                 for bit, board in bit2board_table.items()}
 
+
+class BigBoard:
+    """UTTT Board"""
+    def __init__(self, bits=None):
+        if not bits:
+            self.bits = [ZERO_BIT] * 9
+        else:
+            self.bits = bits
+
+    def draw(self):
+        boards = [bit2board_table[b] for b in self.bits]
+        states = [result_table[b] for b in self.bits]
+        for i, state in enumerate(states):
+            if state != 0:
+                boards[i] = (state, ) * 9
+        chars = [[decode_dict[v] for v in board] for board in boards]
+        rows = [chars[3*i][3*j:3*j+3] +
+                chars[3*i+1][3*j:3*j+3] +
+                chars[3*i+2][3*j:3*j+3] for i, j in np.ndindex(3, 3)]
+        chars = [c for row in rows for c in row]
+        print("""
+         {} │ {} │ {} ┃ {} │ {} │ {} ┃ {} │ {} │ {} 
+        ───┼───┼───╋───┼───┼───╋───┼───┼───
+         {} │ {} │ {} ┃ {} │ {} │ {} ┃ {} │ {} │ {} 
+        ───┼───┼───╋───┼───┼───╋───┼───┼───
+         {} │ {} │ {} ┃ {} │ {} │ {} ┃ {} │ {} │ {} 
+        ━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━
+         {} │ {} │ {} ┃ {} │ {} │ {} ┃ {} │ {} │ {} 
+        ───┼───┼───╋───┼───┼───╋───┼───┼───
+         {} │ {} │ {} ┃ {} │ {} │ {} ┃ {} │ {} │ {} 
+        ───┼───┼───╋───┼───┼───╋───┼───┼───
+         {} │ {} │ {} ┃ {} │ {} │ {} ┃ {} │ {} │ {} 
+        ━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━
+         {} │ {} │ {} ┃ {} │ {} │ {} ┃ {} │ {} │ {} 
+        ───┼───┼───╋───┼───┼───╋───┼───┼───
+         {} │ {} │ {} ┃ {} │ {} │ {} ┃ {} │ {} │ {} 
+        ───┼───┼───╋───┼───┼───╋───┼───┼───
+         {} │ {} │ {} ┃ {} │ {} │ {} ┃ {} │ {} │ {}         
+        """.format(*chars))
