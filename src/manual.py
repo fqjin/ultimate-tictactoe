@@ -1,6 +1,7 @@
 """Play UTTT Manually"""
+import numpy as np
 from random import randrange
-from engine import *
+from engine import BigBoard, decode_dict
 
 
 def play_manual(auto_random=False, verbose=True):
@@ -35,7 +36,6 @@ def play_manual(auto_random=False, verbose=True):
 
         if verbose:
             print(f'{decode_dict[2-game.mover]} @ {sector}, {tile}')
-            print(game.states)
             game.draw()
 
         if game.result:
