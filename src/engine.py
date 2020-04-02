@@ -92,21 +92,17 @@ def make_move_table(move_index):
     #  terminal state will be associated with only one board/bit/hash.
     table_1 = {}
     table_2 = {}
-    table_3 = {}
     for bit, board in bit2board_table.items():
         if board[move_index] != 0:
             table_1[bit] = None
             table_2[bit] = None
-            table_3[bit] = None
         else:
             tmp = list(board)
             tmp[move_index] = 1
             table_1[bit] = hash(tuple(tmp))
             tmp[move_index] = 2
             table_2[bit] = hash(tuple(tmp))
-            tmp[move_index] = 3
-            table_3[bit] = hash(tuple(tmp))
-    return table_1, table_2, table_3
+    return table_1, table_2
 
 
 full_move_table = [make_move_table(i) for i in range(9)]

@@ -37,10 +37,8 @@ def test_get_result():
 def test_move_table():
     assert full_move_table[0][0][ZERO_BIT] == hash((1, 0, 0, 0, 0, 0, 0, 0, 0))
     assert full_move_table[1][1][ZERO_BIT] == hash((0, 2, 0, 0, 0, 0, 0, 0, 0))
-    assert full_move_table[2][2][ZERO_BIT] == hash((0, 0, 3, 0, 0, 0, 0, 0, 0))
     assert full_move_table[3][0][TEST_BIT] == hash((2, 1, 1, 1, 1, 0, 1, 2, 2))
     assert full_move_table[4][1][TEST_BIT] is None
-    assert full_move_table[5][2][TEST_BIT] == hash((2, 1, 1, 0, 1, 3, 1, 2, 2))
     assert full_move_table[6][0][TEST_BIT] is None
 
 
