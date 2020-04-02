@@ -10,6 +10,7 @@ decode_dict = {
 bit2board_table = {hash(indices): indices
                    for indices in np.ndindex(*[4] * 9)}
 
+FULL_HOUSE = tuple(range(9))
 ZERO_BOARD = (0,) * 9
 ONES_BOARD = (1,) * 9
 ZERO_BIT = hash(ZERO_BOARD)
@@ -86,7 +87,9 @@ result_table = {bit: get_result(board)
 
 def make_move_table(move_index):
     """Returns mapping of bits to bits after move"""
-    # Move tables can be trimmed significantly if illegal moves are removed
+    # TODO: Move tables can be trimmed significantly if illegal moves are removed
+    # TODO: Can directly set winning boards to full boards, so each
+    #  terminal state will be associated with only one board/bit/hash.
     table_1 = {}
     table_2 = {}
     table_3 = {}
@@ -118,7 +121,7 @@ for bit, board in bit2board_table.items():
 
 class BigBoard:
     """UTTT Board"""
-    def __init__(self, bits=(ZERO_BIT,)*9, mover=0, sectors=tuple(range(9))):
+    def __init__(self, bits=(ZERO_BIT,)*9, mover=0, sectors=FULL_HOUSE):
         self.bits = list(bits)
         self.mover = mover
         self.sectors = sectors
@@ -126,7 +129,11 @@ class BigBoard:
         for i, state in enumerate(self.states):
             if state != 0:
                 self.bits[i] = BIT_LIST[state]
-        self.legal_moves = self.get_legal_moves()
+        self.result = result_table[hash(tuple(self.states))]
+        if not self.result:
+            self.legal_moves = self.get_legal_moves()
+        else:
+            self.legal_moves = None
 
     def draw(self):
         """Draws 9x9 BigBoard"""
@@ -160,3 +167,23 @@ class BigBoard:
         """Returns list of tuples of ones and zeros describing legal moves"""
         return [ZERO_BOARD if i not in self.sectors or self.states[i]
                 else legal_moves_table[self.bits[i]] for i in range(9)]
+
+    def move(self, sector, tile):
+        """Mover places tile at sector and tile location"""
+        if not self.legal_moves[sector][tile]:
+            raise ValueError(f'Illegal move at sector {sector}, tile {tile}')
+        # Update bits
+        self.bits[sector] = full_move_table[tile][self.mover][self.bits[sector]]
+        # Update states
+        new_state = result_table[self.bits[sector]]
+        if new_state:
+            self.states[sector] = new_state
+            self.bits[sector] = BIT_LIST[new_state]
+        # Update other attributes
+        self.mover = 1 - self.mover
+        if self.states[tile]:
+            self.sectors = FULL_HOUSE
+        else:
+            self.sectors = (tile,)
+        # Update legal moves
+        self.legal_moves = self.get_legal_moves()

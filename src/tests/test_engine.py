@@ -66,3 +66,25 @@ def test_get_legal_moves():
                         ZERO_BIT, TEST_BIT2, ZERO_BIT))
     assert bb.legal_moves == legal_moves
 
+
+def test_move():
+    bb = BigBoard()
+    bb.move(sector=1, tile=3)
+    legal_moves = [ZERO_BOARD] * 9
+    legal_moves[3] = ONES_BOARD
+    assert bb.mover == 1
+    assert bb.sectors == (3,)
+    assert bb.legal_moves == legal_moves
+    assert bb.bits == [ZERO_BIT, hash((0, 0, 0, 1, 0, 0, 0, 0, 0)), ZERO_BIT,
+                       ZERO_BIT, ZERO_BIT, ZERO_BIT,
+                       ZERO_BIT, ZERO_BIT, ZERO_BIT]
+
+    bb.move(sector=3, tile=1)
+    assert bb.mover == 0
+    assert bb.sectors == (1,)
+    assert bb.bits == [ZERO_BIT, hash((0, 0, 0, 1, 0, 0, 0, 0, 0)), ZERO_BIT,
+                       hash((0, 2, 0, 0, 0, 0, 0, 0, 0)), ZERO_BIT, ZERO_BIT,
+                       ZERO_BIT, ZERO_BIT, ZERO_BIT]
+
+    with pytest.raises(ValueError):
+        bb.move(sector=1, tile=3)
