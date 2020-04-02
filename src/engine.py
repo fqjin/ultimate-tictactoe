@@ -115,7 +115,7 @@ full_move_table = [make_move_table(i) for i in range(9)]
 legal_moves_table = {}
 for bit, board in bit2board_table.items():
     result = result_table[bit]
-    if result == 0:
+    if result == 0 or (result == 3 and 0 in board):
         legal_moves_table[bit] = tuple(not board[i] for i in range(9))
 
 
@@ -125,11 +125,18 @@ class BigBoard:
         self.bits = list(bits)
         self.mover = mover
         self.sectors = sectors
-        self.states = [result_table[b] for b in self.bits]
+        # Need to have 2 states for known tie games that are not full yet
+        # TODO: consider speed impact of this vs early result determination
+        #  with the option of removing these from result_table
+        self.secret_states = [result_table[b] for b in self.bits]
+        self.states = [result_table[b]
+                       if not (result_table[b] == 3 and 0 in bit2board_table[b])
+                       else 0
+                       for b in self.bits]
         for i, state in enumerate(self.states):
             if state != 0:
                 self.bits[i] = BIT_LIST[state]
-        self.result = result_table[hash(tuple(self.states))]
+        self.result = result_table[hash(tuple(self.secret_states))]
         if not self.result:
             self.legal_moves = self.get_legal_moves()
         else:
@@ -177,8 +184,10 @@ class BigBoard:
         # Update states
         new_state = result_table[self.bits[sector]]
         if new_state:
-            self.states[sector] = new_state
-            self.bits[sector] = BIT_LIST[new_state]
+            self.secret_states[sector] = new_state
+            if not (new_state == 3 and 0 in bit2board_table[self.bits[sector]]):
+                self.states[sector] = new_state
+                self.bits[sector] = BIT_LIST[new_state]
         # Update other attributes
         self.mover = 1 - self.mover
         if self.states[tile]:
@@ -186,4 +195,8 @@ class BigBoard:
         else:
             self.sectors = (tile,)
         # Update legal moves
-        self.legal_moves = self.get_legal_moves()
+        self.result = result_table[hash(tuple(self.secret_states))]
+        if not self.result:
+            self.legal_moves = self.get_legal_moves()
+        else:
+            self.legal_moves = None
