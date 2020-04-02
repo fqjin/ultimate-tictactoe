@@ -36,7 +36,6 @@ def play_manual(auto_random=False, verbose=True):
         if verbose:
             print(f'{decode_dict[2-game.mover]} @ {sector}, {tile}')
             print(game.states)
-            print(game.secret_states)
             game.draw()
 
         if game.result:

@@ -81,8 +81,17 @@ def get_result(board):
     return result_list[1] + 2 * result_list[2]
 
 
-result_table = {bit: get_result(board)
-                for bit, board in bit2board_table.items()}
+big_result_table = {bit: get_result(board)
+                    for bit, board in bit2board_table.items()}
+result_table = {}
+for bit, board in bit2board_table.items():
+    if 3 in board:
+        continue
+    result = big_result_table[bit]
+    if result == 3 and 0 in board:
+        result_table[bit] = 0
+    else:
+        result_table[bit] = result
 
 
 def make_move_table(move_index):
@@ -110,8 +119,9 @@ full_move_table = [make_move_table(i) for i in range(9)]
 
 legal_moves_table = {}
 for bit, board in bit2board_table.items():
-    result = result_table[bit]
-    if result == 0 or (result == 3 and 0 in board):
+    if 3 in board:
+        continue
+    if not result_table[bit]:
         legal_moves_table[bit] = tuple(not board[i] for i in range(9))
 
 
@@ -121,18 +131,10 @@ class BigBoard:
         self.bits = list(bits)
         self.mover = mover
         self.sectors = sectors
-        # Need to have 2 states for known tie games that are not full yet
-        # TODO: consider speed impact of this vs early result determination
-        #  with the option of removing these from result_table
-        self.secret_states = [result_table[b] for b in self.bits]
-        self.states = [result_table[b]
-                       if not (result_table[b] == 3 and 0 in bit2board_table[b])
-                       else 0
-                       for b in self.bits]
-        for i, state in enumerate(self.states):
-            if state != 0:
-                self.bits[i] = BIT_LIST[state]
-        self.result = result_table[hash(tuple(self.secret_states))]
+        # Sacrifice drawn incomplete sector propagation
+        # to eliminate need for a secret_state
+        self.states = [result_table[b] for b in self.bits]
+        self.result = big_result_table[hash(tuple(self.states))]
         if not self.result:
             self.legal_moves = self.get_legal_moves()
         else:
@@ -165,6 +167,7 @@ class BigBoard:
         ───┼───┼───╋───┼───┼───╋───┼───┼───
          {} │ {} │ {} ┃ {} │ {} │ {} ┃ {} │ {} │ {}         
         """.format(*chars))
+        draw_board(self.states)
 
     def get_legal_moves(self):
         """Returns list of tuples of ones and zeros describing legal moves"""
@@ -180,10 +183,8 @@ class BigBoard:
         # Update states
         new_state = result_table[self.bits[sector]]
         if new_state:
-            self.secret_states[sector] = new_state
-            if not (new_state == 3 and 0 in bit2board_table[self.bits[sector]]):
-                self.states[sector] = new_state
-                self.bits[sector] = BIT_LIST[new_state]
+            self.states[sector] = new_state
+            self.result = big_result_table[hash(tuple(self.states))]
         # Update other attributes
         self.mover = 1 - self.mover
         if self.states[tile]:
@@ -191,7 +192,6 @@ class BigBoard:
         else:
             self.sectors = (tile,)
         # Update legal moves
-        self.result = result_table[hash(tuple(self.secret_states))]
         if not self.result:
             self.legal_moves = self.get_legal_moves()
         else:
