@@ -96,15 +96,16 @@ for bit, board in bit2board_table.items():
 
 def make_move_table(move_index):
     """Returns mapping of bits to bits after move"""
-    # TODO: Move tables can be trimmed significantly if illegal moves are removed
-    # TODO: Can directly set winning boards to full boards, so each
-    #  terminal state will be associated with only one board/bit/hash.
     table_1 = {}
     table_2 = {}
     for bit, board in bit2board_table.items():
+        if 3 in board:
+            continue
+        result = big_result_table[bit]
+        if result and not (result == 3 and 0 in board):
+            continue
         if board[move_index] != 0:
-            table_1[bit] = None
-            table_2[bit] = None
+            continue
         else:
             tmp = list(board)
             tmp[move_index] = 1
