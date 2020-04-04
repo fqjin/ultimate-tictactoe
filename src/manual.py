@@ -4,12 +4,12 @@ from random import randrange
 from engine import BigBoard, decode_dict
 
 
-def play_manual(auto_random=False, verbose=True):
+def play_manual(auto_random=False, verbose=True, moves=81):
     game = BigBoard()
     if verbose:
         game.draw()
 
-    while True:
+    for _ in range(moves):
         if not auto_random:
             print(f'Mover: {decode_dict[game.mover+1]}')
         while True:
@@ -26,6 +26,8 @@ def play_manual(auto_random=False, verbose=True):
                 tile = randrange(9)
             else:
                 tile = int(input('Tile: '))
+                if tile == 'q':
+                    break
 
             try:
                 game.move(sector, tile)
@@ -44,11 +46,12 @@ def play_manual(auto_random=False, verbose=True):
                 print('Tie Game')
             else:
                 print(f'{decode_dict[game.result]} Wins')
-            return game.result
+            break
+    return game
 
 
 if __name__ == '__main__':
-    # play_manual(auto_random=True)
+    # game = play_manual(auto_random=True)
     results = [play_manual(auto_random=True, verbose=False) for _ in range(100)]
     print(results)
     print(np.histogram(results, bins=3))
