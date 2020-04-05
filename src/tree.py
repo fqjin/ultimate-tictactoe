@@ -27,12 +27,22 @@ class Tree:
                  parent: Union['Tree', Root],
                  parent_index=0):
         self.board = board
+        self.sign = value_dict[self.board.mover + 1]  # (-1) ** self.board.mover
         self.parent = parent
         self.index = parent_index
 
         if self.board.result:
-            self.parent.terminal[self.index] = 1
-            self.parent.Q[self.index] = value_dict[self.board.result]
+            # print(f'Hit terminal node: {self.board.result}')
+            self.v = value_dict[self.board.result]
+            self.parent.terminal[self.index] = True
+            self.parent.Q[self.index] = self.v  # N always = 1 in this case
+            # try:
+            #     tmp = self
+            #     while True:
+            #         print(tmp.index)
+            #         tmp = tmp.parent
+            # except AttributeError:
+            #     pass
             return
 
         self.v = self.get_v()
@@ -71,16 +81,47 @@ class Tree:
         p /= p.sum()
         return p
 
-    def check_terminal(self):
-        if 0 not in self.terminal:
-            terminal_v = np.min(self.Q) if self.board.mover else np.max(self.Q)
-            self.parent.terminal[self.index] = 1
-            self.parent.Q[self.index] = terminal_v
-
     def explore(self):
-        puct = self.Q + CPUCT * self.P * np.sqrt(self.N.sum())/(1+self.N)
-        puct -= puct.max() * self.terminal  # kill puct for terminal nodes so they are not visited
-        puct_max = np.argmax(puct)
-        return puct_max
+        puct = (self.sign*self.Q + CPUCT*self.P*np.sqrt(self.N.sum())) / self.N
+        puct_max = int(np.argmax(puct))
 
+        child = self.children[puct_max]
+        if not self.terminal[puct_max]:  # Not a known terminal node
+            if len(child) == 2:  # Child not initialized
+                board = self.board.copy()
+                board.move(child[0], child[1])
+                child.append(Tree(board, parent=self, parent_index=puct_max))
+            else:
+                child[2].explore()
 
+        self.N[puct_max] += 1
+        self.Q[puct_max] += child[2].v
+
+        # Check terminal
+        if 0 not in self.terminal:
+            # print('Full terminal')
+            if self.board.mover:
+                self.v = np.min(self.Q / self.N)
+            else:
+                self.v = np.max(self.Q / self.N)
+            self.parent.terminal[self.index] = True
+            self.parent.Q[self.index] = self.v * self.parent.N[self.index]
+        elif self.sign in self.Q / self.N * self.terminal:
+            # print('Win propagation')
+            self.v = self.sign
+            self.parent.terminal[self.index] = True
+            self.parent.Q[self.index] = self.v * self.parent.N[self.index]
+        else:
+            self.v = self.Q.sum() / self.N.sum()
+
+    def draw(self):
+        self.board.draw()
+
+    def goto(self, *args):
+        child = self
+        for i in args:
+            child = child.children[i][2]
+        return child
+
+    def Q_over_N(self):
+        return self.Q / self.N
