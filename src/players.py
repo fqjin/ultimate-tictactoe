@@ -23,12 +23,13 @@ class TreePlayer(BasePlayer):
         self.nodes = nodes
 
     def get_move(self, board: BigBoard):
+        # TODO: allow moves input so tree can be reused
         r = Root()
         t = Tree(board, r)
         for _ in range(self.nodes):
             t.explore()
             if r.terminal[0]:
-                print('Solved')
+                # print('Solved')
                 break
-        raise NotImplementedError
-
+        index = np.argmax(t.sign * t.Q)
+        return t.children[index][:2]

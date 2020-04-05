@@ -1,10 +1,10 @@
 
-   # PLAYER     :  RATING  POINTS  PLAYED   (%)  CFS(%)     W     D     L  D(%)
-   1 Random1    :     0.0  5057.0   10000    51     ---  3922  2270  3808    23
-   2 Random2    :    -4.0  4943.0   10000    49     ---  3808  2270  3922    23
+   # PLAYER     :  RATING  ERROR  POINTS  PLAYED   (%)  CFS(%)     W     D     L  D(%)
+   1 Random1    :     0.0   ----  5057.0   10000    51      84  3922  2270  3808    23
+   2 Random2    :    -4.0    7.8  4943.0   10000    49     ---  3808  2270  3922    23
 
-White advantage = 17.54
-Draw rate (equal opponents) = 22.74 %
+White advantage = 17.54 +/- 2.08
+Draw rate (equal opponents) = 22.74 % +/- 0.46
 
 Total games               10000
  - White wins              4115

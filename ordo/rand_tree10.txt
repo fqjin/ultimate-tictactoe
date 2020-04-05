@@ -1,0 +1,12 @@
+
+   # PLAYER     :  RATING  ERROR  POINTS  PLAYED   (%)  CFS(%)    W    D    L  D(%)
+   1 Tree10     :   190.1   25.2   746.5    1000    75     100  730   33  237     3
+   2 Random1    :     0.0   ----   253.5    1000    25     ---  237   33  730     3
+
+White advantage = 24.61 +/- 11.35
+Draw rate (equal opponents) = 3.83 % +/- 0.73
+
+Total games                1000
+ - White wins               510
+ - Draws                     33
+ - Black wins               457

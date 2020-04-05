@@ -40,5 +40,7 @@ def make_stats(p1, p2, name1, name2, out_name, num=500):
 if __name__ == '__main__':
     p1 = RandomPlayer()
     # make_stats(p1, p1, 'Random1', 'Random2', 'rand_rand', 5000)
-    p2 = TreePlayer(nodes=10)
-    make_stats(p1, p2, 'Random1', 'Tree10', 'rand_tree10', 500)
+    # p2 = TreePlayer(nodes=10)
+    # make_stats(p1, p2, 'Random1', 'Tree10', 'rand_tree10', 500)
+    p2 = TreePlayer(nodes=100)
+    make_stats(p1, p2, 'Random1', 'Tree10', 'rand_tree100', 50)
