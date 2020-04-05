@@ -141,6 +141,17 @@ class BigBoard:
         else:
             self.legal_moves = None
 
+    def copy(self):
+        # Directly copying attributes saves some function calls
+        board = BigBoard.__new__(BigBoard)
+        board.bits = self.bits.copy()
+        board.mover = self.mover
+        board.sectors = self.sectors
+        board.states = self.states.copy()
+        board.result = self.result
+        board.legal_moves = self.legal_moves
+        return board
+
     def draw(self):
         """Draws 9x9 BigBoard"""
         boards = [bit2board_table[b] for b in self.bits]
