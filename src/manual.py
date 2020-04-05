@@ -10,8 +10,6 @@ def play_manual(auto_random=False, verbose=True, moves=81):
         game.draw()
 
     for _ in range(moves):
-        if not auto_random:
-            print(f'Mover: {decode_dict[game.mover+1]}')
         while True:
             if len(game.sectors) > 1:
                 if auto_random:

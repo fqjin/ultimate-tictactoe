@@ -7,6 +7,8 @@ decode_dict = {
     2: 'O',
     3: 'T',
 }
+# TODO: Check if using tuples as keys rather than its hash is faster
+#  because the dictionary is presumably hashing its keys anyway!
 bit2board_table = {hash(indices): indices
                    for indices in np.ndindex(*[4] * 9)}
 
@@ -24,13 +26,13 @@ TEST_BIT2 = hash((0, 0, 1, 2, 2, 0, 0, 1, 1))
 
 def draw_board(board):
     chars = [decode_dict[v] for v in board]
-    print("""
+    print('''\
      {} │ {} │ {} 
     ───┼───┼───
      {} │ {} │ {} 
     ───┼───┼───
-     {} │ {} │ {} 
-    """.format(*chars))
+     {} │ {} │ {} \
+    '''.format(*chars))
 
 
 def check_row(row, result_list):
@@ -160,25 +162,27 @@ class BigBoard:
                 chars[3*i+1][3*j:3*j+3] +
                 chars[3*i+2][3*j:3*j+3] for i, j in np.ndindex(3, 3)]
         chars = [c for row in rows for c in row]
-        print("""
-         {} │ {} │ {} ┃ {} │ {} │ {} ┃ {} │ {} │ {} 
-        ───┼───┼───╋───┼───┼───╋───┼───┼───
-         {} │ {} │ {} ┃ {} │ {} │ {} ┃ {} │ {} │ {} 
-        ───┼───┼───╋───┼───┼───╋───┼───┼───
-         {} │ {} │ {} ┃ {} │ {} │ {} ┃ {} │ {} │ {} 
-        ━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━
-         {} │ {} │ {} ┃ {} │ {} │ {} ┃ {} │ {} │ {} 
-        ───┼───┼───╋───┼───┼───╋───┼───┼───
-         {} │ {} │ {} ┃ {} │ {} │ {} ┃ {} │ {} │ {} 
-        ───┼───┼───╋───┼───┼───╋───┼───┼───
-         {} │ {} │ {} ┃ {} │ {} │ {} ┃ {} │ {} │ {} 
-        ━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━
-         {} │ {} │ {} ┃ {} │ {} │ {} ┃ {} │ {} │ {} 
-        ───┼───┼───╋───┼───┼───╋───┼───┼───
-         {} │ {} │ {} ┃ {} │ {} │ {} ┃ {} │ {} │ {} 
-        ───┼───┼───╋───┼───┼───╋───┼───┼───
-         {} │ {} │ {} ┃ {} │ {} │ {} ┃ {} │ {} │ {}         
-        """.format(*chars))
+        # TODO: Improve draw
+        print('''\
+     {} │ {} │ {} ┃ {} │ {} │ {} ┃ {} │ {} │ {} 
+    ───┼───┼───╋───┼───┼───╋───┼───┼───
+     {} │ {} │ {} ┃ {} │ {} │ {} ┃ {} │ {} │ {} 
+    ───┼───┼───╋───┼───┼───╋───┼───┼───
+     {} │ {} │ {} ┃ {} │ {} │ {} ┃ {} │ {} │ {} 
+    ━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━
+     {} │ {} │ {} ┃ {} │ {} │ {} ┃ {} │ {} │ {} 
+    ───┼───┼───╋───┼───┼───╋───┼───┼───
+     {} │ {} │ {} ┃ {} │ {} │ {} ┃ {} │ {} │ {} 
+    ───┼───┼───╋───┼───┼───╋───┼───┼───
+     {} │ {} │ {} ┃ {} │ {} │ {} ┃ {} │ {} │ {} 
+    ━━━━━━━━━━━╋━━━━━━━━━━━╋━━━━━━━━━━━
+     {} │ {} │ {} ┃ {} │ {} │ {} ┃ {} │ {} │ {} 
+    ───┼───┼───╋───┼───┼───╋───┼───┼───
+     {} │ {} │ {} ┃ {} │ {} │ {} ┃ {} │ {} │ {} 
+    ───┼───┼───╋───┼───┼───╋───┼───┼───
+     {} │ {} │ {} ┃ {} │ {} │ {} ┃ {} │ {} │ {} \
+        '''.format(*chars))
+        print(f'Mover: {decode_dict[self.mover + 1]}, sector: {self.sectors}')
         draw_board(self.states)
 
     def get_legal_moves(self):
@@ -200,6 +204,8 @@ class BigBoard:
         # Update other attributes
         self.mover = 1 - self.mover
         if self.states[tile]:
+            # Sectors describes which sectors are allowed
+            # Legal moves then removes sections with determined state
             self.sectors = FULL_HOUSE
         else:
             self.sectors = (tile,)
