@@ -4,9 +4,11 @@ from players import BasePlayer
 
 def play(player0: BasePlayer,
          player1: BasePlayer,
-         game=BigBoard(),
+         game=None,
          verbose=True,
          press_enter=True):
+    if game is None:
+        game = BigBoard()
     moves = []
     if verbose:
         game.draw()
@@ -27,11 +29,13 @@ def play(player0: BasePlayer,
             game.draw()
 
         if game.result:
-            print('GAME OVER')
-            if game.result == 3:
-                print('Tie Game')
-            else:
-                print(f'{decode_dict[game.result]} Wins')
             break
+
+    if verbose:
+        print('GAME OVER')
+        if game.result == 3:
+            print('Tie Game')
+        else:
+            print(f'{decode_dict[game.result]} Wins')
 
     return game.result, moves
