@@ -1,5 +1,6 @@
 """Game Tree Logic"""
 import numpy as np
+from typing import Union
 from engine import BigBoard
 
 
@@ -14,14 +15,17 @@ value_dict = {
 
 class Root:
     def __init__(self):
-        self.N = [0]
+        self.N = [1]
         self.Q = [0.0]
         self.terminal = [0]
 
 
 class Tree:
     """Game Tree"""
-    def __init__(self, board: BigBoard, parent: 'Tree', parent_index):
+    def __init__(self,
+                 board: BigBoard,
+                 parent: Union['Tree', Root],
+                 parent_index=0):
         self.board = board
         self.parent = parent
         self.index = parent_index
@@ -32,27 +36,33 @@ class Tree:
             return
 
         self.v = self.get_v()
-        p = self.get_p()
+        p_tmp = self.get_p()
         self.P = []
         self.children = []
         for sector, tile in np.ndindex(9, 9):
             if self.board.legal_moves[sector][tile]:
-                # sector, tile, P, Q, board
-                # initialize child board and Q on first call
-                self.children.append((sector, tile))
-                self.P.append(p[sector, tile])
+                # sector, tile, board
+                # initialize child board on first call
+                self.children.append([sector, tile])
+                self.P.append(p_tmp[sector, tile])
+        # TODO: Add logic for forcing moves
 
         self.P = np.asarray(self.P)
-        self.N = np.zeros_like(self.P)
+        # Start at N=1 to use P as prior
+        # TODO: Actually compare N=0 vs N=1
+        self.N = np.ones_like(self.P, dtype=np.int)
         self.Q = np.full_like(self.P, self.v)
-        self.terminal = np.zeros_like(self.P)
+        self.terminal = np.zeros_like(self.P, dtype=np.bool)
 
     def get_v(self):
-        v = 0.0  # v = value_head(self.board)
+        # v = value_head(self.board)
+        v = self.board.states.count(1) - self.board.states.count(2)
+        v /= 9
         return v
 
     def get_p(self):
-        p = np.full((9, 9), 1/81)  # p = policy_head(self.board)
+        # p = policy_head(self.board)
+        p = np.full((9, 9), 1/81)
         # Add Dirichlet noise
         noise = np.random.dirichlet(ALPHA).reshape((9, 9))
         p = 0.75 * p + 0.25 * noise
