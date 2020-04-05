@@ -19,8 +19,9 @@ class RandomPlayer(BasePlayer):
 
 
 class TreePlayer(BasePlayer):
-    def __init__(self, nodes=0):
+    def __init__(self, nodes=0, v_mode=True):
         self.nodes = nodes
+        self.v_mode = v_mode
 
     def get_move(self, board: BigBoard):
         # TODO: allow moves input so tree can be reused
@@ -31,5 +32,8 @@ class TreePlayer(BasePlayer):
             if r.terminal[0]:
                 # print('Solved')
                 break
-        index = np.argmax(t.sign * t.Q)
+        if self.v_mode:  # for low nodes
+            index = np.argmax(t.sign * t.Q)
+        else:
+            index = np.argmax(t.N)
         return t.children[index][:2]

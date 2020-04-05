@@ -1,1 +1,1 @@
-.\ordo-win64.exe -a 0 -A "Random1" -D -W -J -s 10 -p rand_rand.pgn -o rand_rand.txt -U "0,1,2,3,4,5,6,7,8,9,10"
+.\ordo-win64.exe -a 0 -A "Random1" -Q -D -W -J -s 10 -p rand_rand.pgn -o rand_rand.txt -U "0,1,2,3,4,5,6,7,8,9,10"
