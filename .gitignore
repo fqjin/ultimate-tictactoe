@@ -12,3 +12,7 @@ __pycache__/
 
 # Project
 Papers/
+ordo/ordo-win64.exe
+ordo/MANUAL.pdf
+ordo/LICENSE.txt
+ordo/*.pgn
