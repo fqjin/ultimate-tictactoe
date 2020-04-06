@@ -6,7 +6,10 @@ def play(player0: BasePlayer,
          player1: BasePlayer,
          game=None,
          verbose=True,
-         press_enter=True):
+         press_enter=True,
+         give_moves0=False,
+         give_moves1=False,
+         ):
     if game is None:
         game = BigBoard()
     moves = []
@@ -17,10 +20,20 @@ def play(player0: BasePlayer,
         if press_enter:
             input()
 
+        # TODO: Rewrite keep_tree logic better
         if game.mover:
-            sector, tile = player1.get_move(game)
+            if give_moves1 and len(moves) > 3:
+                sector, tile = player1.get_move(game, moves=moves[-2:])
+            else:
+                sector, tile = player1.get_move(game)
+            # print(1, player1.t.N.sum() - len(player1.t.N))
         else:
-            sector, tile = player0.get_move(game)
+            if give_moves0 and len(moves) > 2:
+                sector, tile = player0.get_move(game, moves=moves[-2:])
+            else:
+                sector, tile = player0.get_move(game)
+            # print(0, player0.t.N.sum() - len(player0.t.N))
+
         game.move(sector, tile)
         moves.append((sector, tile))
 

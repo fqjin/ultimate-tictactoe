@@ -10,7 +10,7 @@ result_strings = {
 }
 
 
-def make_stats(p1, p2, name1, name2, out_name, num=500):
+def make_stats(p1, p2, name1, name2, out_name, num=500, kt1=False, kt2=False):
     """Play games between two players and save stats
 
     P1 and P2 will play `num` rounds (two games as X and O)
@@ -23,24 +23,32 @@ def make_stats(p1, p2, name1, name2, out_name, num=500):
         name2: name of player 2
         out_name: output pgn file name
         num: number of rounds
+        kt1: keep_tree for player 1
+        kt2: keep_tree for player 2
     """
     with open(f'../ordo/{out_name}.pgn', '+w') as pgn:
         for _ in tqdm(range(num)):
-            result, _ = play(p1, p2, verbose=False, press_enter=False)
+            result, _ = play(p1, p2, verbose=False, press_enter=False, give_moves0=kt1, give_moves1=kt2)
             pgn.write(f'[White "{name1}"]\n')
             pgn.write(f'[Black "{name2}"]\n')
             pgn.write(result_strings[result])
 
-            result, _ = play(p2, p1, verbose=False, press_enter=False)
+            result, _ = play(p2, p1, verbose=False, press_enter=False, give_moves0=kt2, give_moves1=kt1)
             pgn.write(f'[White "{name2}"]\n')
             pgn.write(f'[Black "{name1}"]\n')
             pgn.write(result_strings[result])
 
 
 if __name__ == '__main__':
-    p1 = RandomPlayer()
-    # make_stats(p1, p1, 'Random1', 'Random2', 'rand_rand', 5000)
-    # p2 = TreePlayer(nodes=10)
-    # make_stats(p1, p2, 'Random1', 'Tree10', 'rand_tree10', 500)
-    p2 = TreePlayer(nodes=100)
-    make_stats(p1, p2, 'Random1', 'Tree10', 'rand_tree100', 50)
+    p0 = RandomPlayer()
+    # make_stats(p0, p0, 'Random1', 'Random2', 'rand_rand', 5000)
+
+    # p1 = TreePlayer(nodes=10)
+    # make_stats(p0, p1, 'Random1', 'Tree10', 'rand_tree10', 500)
+
+    p1 = TreePlayer(nodes=100, v_mode=True)
+    # p2 = TreePlayer(nodes=100, v_mode=True)
+    # make_stats(p1, p2, 'Tree100V', 'Tree100V_kt', 'keep_tree', 50, kt1=False, kt2=True)
+
+    # make_stats(p0, p1, 'Random1', 'Tree100V', 'rand_tree100V', 50)
+    make_stats(p0, p1, 'Random1', 'Tree100V_kt', 'rand_tree100V_kt', 50, kt2=True)

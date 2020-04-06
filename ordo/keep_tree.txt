@@ -1,0 +1,8 @@
+
+   # PLAYER                :  RATING  ERROR  POINTS  PLAYED   (%)  CFS(%)    W    D    L  D(%)
+   1 Tree100V_kt           :    26.0   40.3    53.5     100    54      90   46   15   39    15
+   2 Tree100V              :     0.0   ----    46.5     100    47     ---   39   15   46    15
+
+White advantage = 82.52 +/- 24.49
+Draw rate (equal opponents) = 15.54 % +/- 2.32
+
