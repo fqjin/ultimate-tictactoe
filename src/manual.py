@@ -1,42 +1,36 @@
 """Play UTTT Manually"""
-import numpy as np
-from random import randrange
 from engine import BigBoard, decode_dict
 
 
-def play_manual(auto_random=False, verbose=True, moves=81):
-    game = BigBoard()
-    if verbose:
-        game.draw()
+def play_manual():
+    """Play manual game
 
-    for _ in range(moves):
+    Will ask for sector and tile numbers
+    To quit, give -1 for tile
+    """
+    game = BigBoard()
+    game.draw()
+
+    while True:
         while True:
             if len(game.sectors) > 1:
-                if auto_random:
-                    sector = randrange(9)
-                else:
-                    sector = int(input('Sector: '))
+                sector = int(input('Sector: '))
             else:
                 sector = game.sectors[0]
-                if not auto_random:
-                    print(f'Sector {sector}')
-            if auto_random:
-                tile = randrange(9)
-            else:
-                tile = int(input('Tile: '))
-                if tile == 'q':
-                    break
+                print(f'Sector {sector}')
+            tile = int(input('Tile: '))
+            if tile == -1:
+                print('QUIT')
+                return game
 
             try:
                 game.move(sector, tile)
                 break
             except ValueError:
-                if not auto_random:
-                    print('Illegal Move')
+                print('Illegal Move')
 
-        if verbose:
-            print(f'{decode_dict[2-game.mover]} @ {sector}, {tile}')
-            game.draw()
+        print(f'{decode_dict[2-game.mover]} @ {sector}, {tile}')
+        game.draw()
 
         if game.result:
             print('GAME OVER')
@@ -49,7 +43,4 @@ def play_manual(auto_random=False, verbose=True, moves=81):
 
 
 if __name__ == '__main__':
-    # game = play_manual(auto_random=True)
-    results = [play_manual(auto_random=True, verbose=False) for _ in range(100)]
-    print(results)
-    print(np.histogram(results, bins=3))
+    g = play_manual()
