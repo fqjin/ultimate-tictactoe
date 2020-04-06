@@ -6,16 +6,38 @@ from tree import Root, Tree
 
 
 class BasePlayer:
-    def get_move(self, board: BigBoard):
+    def get_move(self, board: BigBoard, moves=None):
         raise NotImplementedError
 
 
 class RandomPlayer(BasePlayer):
-    def get_move(self, board: BigBoard):
+    def get_move(self, board: BigBoard, moves=None):
         coords = np.nonzero(board.legal_moves)
         num_legal_moves = len(coords[0])
         move_index = randrange(num_legal_moves)
         return coords[0][move_index], coords[1][move_index]
+
+
+class ManualPlayer(BasePlayer):
+    """Manually enter sector and tile coordinates.
+
+    To quit, input -1 for tile
+    """
+    def get_move(self, board: BigBoard, moves=None):
+        while True:
+            if len(board.sectors) > 1:
+                sector = int(input('Sector: '))
+            else:
+                sector = board.sectors[0]
+                print(f'Sector {sector}')
+            tile = int(input('Tile: '))
+            if tile == -1:
+                raise RuntimeError('QUIT')
+
+            if board.legal_moves[sector][tile]:
+                return sector, tile
+            else:
+                print('Illegal Move')
 
 
 class TreePlayer(BasePlayer):
