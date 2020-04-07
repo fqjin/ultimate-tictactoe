@@ -72,7 +72,7 @@ class TreePlayer(BasePlayer):
                 break
 
         if self.v_mode:  # for low nodes
-            index = np.argmax(self.t.sign * self.t.Q)
+            index = np.argmax(self.t.sign * self.t.Q / self.t.N)
         else:
             index = np.argmax(self.t.N)
         return self.t.children[index][:2]
