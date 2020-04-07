@@ -36,13 +36,6 @@ class Tree:
             self.v = value_dict[self.board.result]
             self.parent.terminal[self.index] = True
             self.parent.Q[self.index] = self.v  # N always = 1 in this case
-            # try:
-            #     tmp = self
-            #     while True:
-            #         print(tmp.index)
-            #         tmp = tmp.parent
-            # except AttributeError:
-            #     pass
             return
 
         self.v = self.get_v()

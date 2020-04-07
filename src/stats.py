@@ -46,14 +46,20 @@ if __name__ == '__main__':
     # p1 = TreePlayer(nodes=10)
     # make_stats(p0, p1, 'Random1', 'Tree10', 'rand_tree10', 500)
 
-    p1 = TreePlayer(nodes=100, v_mode=True)
-    # p2 = TreePlayer(nodes=100, v_mode=True)
+    # p1 = TreePlayer(nodes=100, v_mode=True)
+    # p2 = TreePlayer(nodes=100, v_mode=False)
+    # make_stats(p1, p2, 'Tree100V', 'Tree100N', 'tree100V_vs_N', 50)
     # make_stats(p1, p2, 'Tree100V', 'Tree100V_kt', 'keep_tree', 50, kt1=False, kt2=True)
 
     # make_stats(p0, p1, 'Random1', 'Tree100V', 'rand_tree100V', 50)
     # make_stats(p0, p1, 'Random1', 'Tree100V_kt', 'rand_tree100V_kt', 50, kt2=True)
 
+    # Starting at 1000 nodes, all treeplayers will be kt
+    p1 = TreePlayer(nodes=1000, v_mode=True)
+    # p2 = TreePlayer(nodes=1000, v_mode=False)
+    # make_stats(p1, p2, 'Tree1000V', 'Tree1000N', 'tree1000V_vs_N', 5, True, True)
+
     from gui import GuiPlayer
     p2 = GuiPlayer(x=600)
-    make_stats(p1, p2, 'Tree100V_kt', 'Felix', 'tree100V_kt_felix', 2, kt1=True, kt2=True)
-    # I beat all tree players up to 100V_kt. Still blundering mate in 1.
+    make_stats(p1, p2, 'Tree1000V', 'Felix', 'tree1000V_felix', 2, kt1=True, kt2=True)
+
