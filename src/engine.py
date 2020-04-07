@@ -9,6 +9,9 @@ decode_dict = {
 }
 # TODO: Check if using tuples as keys rather than its hash is faster
 #  because the dictionary is presumably hashing its keys anyway!
+# 175 ns to hash board and access bit2board
+# 122 ns to access board2board without hash
+# Doesn't make big impact on final speed, but would simplify the code.
 bit2board_table = {hash(indices): indices
                    for indices in np.ndindex(*[4] * 9)}
 

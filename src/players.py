@@ -51,18 +51,18 @@ class TreePlayer(BasePlayer):
         if moves is None:
             self.t = Tree(board, r)
         else:
-            for m in moves:
-                for c in self.t.children:
-                    if c[0] == m[0] and c[1] == m[1]:
-                        try:
+            try:
+                for m in moves:
+                    for c in self.t.children:
+                        if c[0] == m[0] and c[1] == m[1]:
                             self.t = c[2]
                             self.t.index = 0
                             self.t.parent = r
-                        except IndexError:
-                            self.t = Tree(board, r)
-                        break
-                else:
-                    raise RuntimeError('Given move not found in children')
+                            break
+                    else:
+                        raise RuntimeError('Given move not found in children')
+            except IndexError:
+                self.t = Tree(board, r)
 
         # for _ in range(self.nodes - self.t.N.sum() + len(self.t.N)):
         for _ in range(self.nodes):
