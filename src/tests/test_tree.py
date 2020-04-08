@@ -35,7 +35,7 @@ def test_explore():
     x = BigBoard(sectors=(0,), mover=0)
     t = Tree(x, parent=r, parent_index=0)
     t.explore()
-    assert t.N[0] == 2
+    assert t.N.sum() == 9+1
 
 
 ## Other Useful Test Code:

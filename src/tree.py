@@ -38,6 +38,12 @@ class Tree:
             self.parent.Q[self.index] = self.v  # N always = 1 in this case
             return
 
+        # TODO: Add logic for forcing moves
+        #  However, it seems only having 1 move is relatively rare
+        #  But it may help with progagating deeper info up the tree
+        # if np.sum(self.board.legal_moves):
+        #     pass
+
         self.v = self.get_v()
         p_tmp = self.get_p()
         self.P = []
@@ -48,10 +54,9 @@ class Tree:
                 # initialize child board on first call
                 self.children.append([sector, tile])
                 self.P.append(p_tmp[sector, tile])
-        # TODO: Add logic for forcing moves
 
         self.P = np.asarray(self.P)
-        # Start at N=1 to use P as prior
+        # Start at N=1 to use Q/P as prior
         # TODO: Actually compare N=0 vs N=1
         self.N = np.ones_like(self.P, dtype=np.int)
         self.Q = np.full_like(self.P, self.v)

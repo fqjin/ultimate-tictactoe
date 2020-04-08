@@ -165,7 +165,6 @@ class BigBoard:
                 chars[3*i+1][3*j:3*j+3] +
                 chars[3*i+2][3*j:3*j+3] for i, j in np.ndindex(3, 3)]
         chars = [c for row in rows for c in row]
-        # TODO: Improve draw
         print('''\
      {} │ {} │ {} ┃ {} │ {} │ {} ┃ {} │ {} │ {} 
     ───┼───┼───╋───┼───┼───╋───┼───┼───
