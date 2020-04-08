@@ -44,8 +44,7 @@ class Tree:
         # if np.sum(self.board.legal_moves):
         #     pass
 
-        self.v = self.get_v()
-        p_tmp = self.get_p()
+        p_tmp, self.v = self.get_p_and_v()
         self.P = []
         self.children = []
         for sector, tile in np.ndindex(9, 9):
@@ -62,16 +61,19 @@ class Tree:
         self.Q = np.full_like(self.P, self.v)
         self.terminal = np.zeros_like(self.P, dtype=np.bool)
 
+    def get_p_and_v(self):
+        return self.add_dirichlet(self.get_p()), self.get_v()
+
     def get_v(self):
-        # v = value_head(self.board)
         v = self.board.states.count(1) - self.board.states.count(2)
         v /= 9
         return v
 
     def get_p(self):
-        # p = policy_head(self.board)
-        p = np.full((9, 9), 1/81)
-        # Add Dirichlet noise
+        return np.full((9, 9), 1/81)
+
+    def add_dirichlet(self, p):
+        """Add Dirichlet noise"""
         noise = np.random.dirichlet(ALPHA).reshape((9, 9))
         p = 0.75 * p + 0.25 * noise
         # Mask and normalize
