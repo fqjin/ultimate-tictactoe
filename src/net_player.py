@@ -1,4 +1,5 @@
 import torch
+import numpy as np
 from tree import Tree
 from players import TreePlayer
 from dataset import board_to_planes
@@ -28,3 +29,14 @@ class NetPlayer(TreePlayer):
         super().__init__(nodes, v_mode, selfplay)
         self.treeclass = NetTree
         self.treeargs = {'model': model, 'device': device}
+        self.savelist = savelist
+
+    def get_move(self, board, moves=None):
+        retvalue = super().get_move(board, moves)
+        if self.savelist is not None:
+            N_grid = np.zeros((9, 9))
+            for c, n in zip(self.t.children, self.t.N):
+                N_grid[c[0], c[1]] = n
+                # TODO: Add terminal logic
+            self.savelist.append(N_grid)
+        return retvalue
