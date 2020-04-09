@@ -38,5 +38,6 @@ class NetPlayer(TreePlayer):
             for c, n in zip(self.t.children, self.t.N):
                 N_grid[c[0], c[1]] = n
                 # TODO: Add terminal logic
+                #  but not necessary if all positions get 1000 nodes (no early break)
             self.savelist.append(N_grid)
         return retvalue

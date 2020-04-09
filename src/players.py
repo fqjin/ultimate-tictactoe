@@ -70,12 +70,12 @@ class TreePlayer(BasePlayer):
             except IndexError:
                 self.t = self.treeclass(board, r, **self.treeargs)
 
+        # for _ in range(self.nodes):  # Disable node accumulation
         for _ in range(self.nodes - self.t.N.sum() + len(self.t.N)):
-        # for _ in range(self.nodes):
             self.t.explore()
-            if r.terminal[0]:
-                # print('Solved')
-                break
+            # if r.terminal[0]:  # Disable early stopping for selfplay games
+            #     # print('Solved')
+            #     break
 
         if self.v_mode:  # for low nodes
             index = np.argmax(self.t.sign * self.t.Q / self.t.N)
