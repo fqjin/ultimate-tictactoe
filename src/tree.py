@@ -30,6 +30,7 @@ class Tree:
         self.sign = value_dict[self.board.mover + 1]  # (-1) ** self.board.mover
         self.parent = parent
         self.index = parent_index
+        self.args = {}
 
         if self.board.result:
             # print(f'Hit terminal node: {self.board.result}')
@@ -90,7 +91,10 @@ class Tree:
             if len(child) == 2:  # Child not initialized
                 board = self.board.copy()
                 board.move(child[0], child[1])
-                child.append(Tree(board, parent=self, parent_index=puct_max))
+                child.append(self.__class__(board,
+                                            parent=self,
+                                            parent_index=puct_max,
+                                            **self.args))
             else:
                 child[2].explore()
 

@@ -51,7 +51,7 @@ class TreePlayer(BasePlayer):
     def get_move(self, board: BigBoard, moves=None):
         r = Root()
         if moves is None:
-            self.t = self.treeclass(board, r, *self.treeargs)
+            self.t = self.treeclass(board, r, **self.treeargs)
         else:
             try:
                 for m in moves:
@@ -64,7 +64,7 @@ class TreePlayer(BasePlayer):
                     else:
                         raise RuntimeError('Given move not found in children')
             except IndexError:
-                self.t = self.treeclass(board, r, *self.treeargs)
+                self.t = self.treeclass(board, r, **self.treeargs)
 
         # for _ in range(self.nodes - self.t.N.sum() + len(self.t.N)):
         for _ in range(self.nodes):
