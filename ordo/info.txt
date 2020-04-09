@@ -1,0 +1,2 @@
+Get ordo from https://github.com/michiguel/Ordo/releases
+.\ordo-win64.exe -a 0 -A "Random1" -Q -D -W -J -s 10 -U "0,1,2,3,4,5,6,7,8,9,10" -o rand_rand.txt -- rand_rand.pgn
