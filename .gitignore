@@ -18,3 +18,5 @@ ordo/LICENSE.txt
 ordo/*.pgn
 ordo/groups.txt
 selfplay/
+images/*
+!images/Game_Mouse.png
