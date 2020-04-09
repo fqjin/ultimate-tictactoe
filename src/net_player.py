@@ -23,8 +23,8 @@ class NetTree(Tree):
 
 
 class NetPlayer(TreePlayer):
-    def __init__(self, nodes=0, v_mode=True, model=None, device='cpu'):
+    def __init__(self, nodes=0, v_mode=True, selfplay=False, model=None, device='cpu', savelist=None):
         assert model is not None
-        super().__init__(nodes, v_mode)
+        super().__init__(nodes, v_mode, selfplay)
         self.treeclass = NetTree
         self.treeargs = {'model': model, 'device': device}

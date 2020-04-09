@@ -41,12 +41,13 @@ class ManualPlayer(BasePlayer):
 
 
 class TreePlayer(BasePlayer):
-    def __init__(self, nodes=0, v_mode=True):
+    def __init__(self, nodes=0, v_mode=True, selfplay=False):
         self.nodes = nodes
         self.v_mode = v_mode
         self.t = None
         self.treeclass = Tree
         self.treeargs = {}
+        self.selfplay = selfplay
 
     def get_move(self, board: BigBoard, moves=None):
         r = Root()
@@ -54,6 +55,9 @@ class TreePlayer(BasePlayer):
             self.t = self.treeclass(board, r, **self.treeargs)
         else:
             try:
+                if self.selfplay:
+                    # Only want last move if selfplay
+                    moves = [moves[-1]]
                 for m in moves:
                     for c in self.t.children:
                         if c[0] == m[0] and c[1] == m[1]:
@@ -66,8 +70,8 @@ class TreePlayer(BasePlayer):
             except IndexError:
                 self.t = self.treeclass(board, r, **self.treeargs)
 
-        # for _ in range(self.nodes - self.t.N.sum() + len(self.t.N)):
-        for _ in range(self.nodes):
+        for _ in range(self.nodes - self.t.N.sum() + len(self.t.N)):
+        # for _ in range(self.nodes):
             self.t.explore()
             if r.terminal[0]:
                 # print('Solved')

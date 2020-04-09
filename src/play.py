@@ -5,10 +5,10 @@ from players import BasePlayer
 def play(player0: BasePlayer,
          player1: BasePlayer,
          game=None,
-         verbose=True,
-         press_enter=True,
-         give_moves0=False,
-         give_moves1=False,
+         verbose=False,
+         press_enter=False,
+         give_moves0=True,
+         give_moves1=True,
          ):
     if game is None:
         game = BigBoard()
