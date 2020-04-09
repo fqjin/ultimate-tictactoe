@@ -1,6 +1,6 @@
-## A selfplay reinforcement learning MCTS neural network that plays Ultimate Tic-Tac-Toe (UTTT)
+## A selfplay reinforcement learning MCTS neural network <br/> that plays Ultimate Tic-Tac-Toe (UTTT)
 <p>
-<img src="./images/Game_Mouse.png" width="393" height="412">
+<img src="./images/Game_Mouse.png" width="392" height="412">
 </p>
 
 ## Rules:
