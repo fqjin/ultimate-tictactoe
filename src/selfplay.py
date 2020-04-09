@@ -8,7 +8,7 @@ def selfplay(nodes, number, model, device='cpu'):
     savelist = []
     player = NetPlayer(nodes, v_mode=True, selfplay=True,
                        model=model, device=device, savelist=savelist)
-    result, moves = play(player, player, verbose=True)
+    result, moves = play(player, player, verbose=False)
 
     savepath = '../selfplay/' + str(number).zfill(5)
     np.savez(savepath, result=result, moves=moves, visits=savelist)
@@ -23,5 +23,5 @@ if __name__ == '__main__':
         # May need to implement batching (virtual MCTS).
         device = 'cpu'
         m = UTTTNet().to(device).eval()
-        selfplay(1000, 0, m, device)
+        selfplay(1000, i, m, device)
 
