@@ -52,7 +52,7 @@ class UTTTNet(nn.Module):
         # Originally planning to do dual 9x9 and 3x3 residual paths,
         # but this seems a bit too complicated.
         # 8 full 9x9 input planes:
-        # - mover, X, O, big empty tiled, big legal, big X, big O, big T
+        # - mover, X, O, legal moves, big empty tiled, big X, big O, big T
         # - empty 9x9 is NOT needed, see AlphaGoZero paper
 
         self.in_conv = nn.Conv2d(8, filters - 8, 3, padding=1, bias=False)
