@@ -4,6 +4,7 @@ from torch.nn.functional import interpolate
 from torch.utils.data import Dataset
 from engine import BigBoard, bit2board_table
 from tree import value_dict
+from random import getrandbits
 
 
 def board_to_planes(bigboard: BigBoard):
@@ -67,8 +68,9 @@ def game_to_data(game):
 
 class GameDataset(Dataset):
     """Loads selfplay games"""
-    def __init__(self, start, end, device='cpu'):
+    def __init__(self, start, end, device='cpu', augment=False):
         path = '../selfplay/'
+        self.augment = augment
         self.planes = []
         self.policy = []
         self.result = []
@@ -89,5 +91,23 @@ class GameDataset(Dataset):
         return len(self.result)
 
     def __getitem__(self, idx):
-        # TODO: flip/rot augmentation
-        return self.planes[idx], (self.policy[idx], self.result[idx])
+        if self.augment:
+            # getrandbits 10x faster than randint
+            aug = getrandbits(3)
+            planes = self.planes[idx]
+            policy = self.policy[idx]
+            if aug & 3 == 1:
+                planes = torch.flip(planes, dims=(1,))
+                policy = torch.flip(policy, dims=(0,))
+            elif aug & 3 == 2:
+                planes = torch.flip(planes, dims=(2,))
+                policy = torch.flip(policy, dims=(1,))
+            elif aug & 3 == 3:
+                planes = torch.flip(planes, dims=(1, 2))
+                policy = torch.flip(policy, dims=(0, 1))
+            if aug & 4:
+                planes = torch.transpose(planes, 1, 2)
+                policy = torch.transpose(policy, 0, 1)
+            return planes, (policy, self.result[idx])
+        else:
+            return self.planes[idx], (self.policy[idx], self.result[idx])
