@@ -84,7 +84,7 @@ class GameDataset(Dataset):
         self.policy = torch.stack(self.policy).to(device)
         self.result = torch.tensor(self.result,
                                    dtype=torch.float32,
-                                   device=device)
+                                   device=device).view(-1, 1)
         # TODO: Mixed/half precision training
 
     def __len__(self):
