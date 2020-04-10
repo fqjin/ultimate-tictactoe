@@ -1,6 +1,9 @@
+import numpy as np
 import torch
 from torch.nn.functional import interpolate
+from torch.utils.data import Dataset
 from engine import BigBoard, bit2board_table
+from tree import value_dict
 
 
 def board_to_planes(bigboard: BigBoard):
@@ -41,3 +44,50 @@ def board_to_planes(bigboard: BigBoard):
                         big_t], dim=1)
     return planes
 
+
+def game_to_data(game):
+    """Plays out the stored game and returns planes, policy, result"""
+    planes = []
+    b = BigBoard()
+    planes.append(board_to_planes(b))
+    for m in game['moves'][:-1]:
+        b.move(*m)
+        planes.append(board_to_planes(b))
+
+    policy = torch.from_numpy(game['visits']).float()
+    policy /= torch.sum(policy, dim=(1, 2), keepdim=True)
+    policy = policy.view(-1, 3, 3, 3, 3)
+    policy = torch.cat(policy.chunk(3, dim=1), dim=3)
+    policy = torch.cat(policy.chunk(3, dim=2), dim=4)
+    policy = policy.squeeze_()
+
+    result = [value_dict[game['result'].item()]] * len(planes)
+    return planes, policy, result
+
+
+class GameDataset(Dataset):
+    """Loads selfplay games"""
+    def __init__(self, start, end, device='cpu'):
+        path = '../selfplay/'
+        self.planes = []
+        self.policy = []
+        self.result = []
+        for i in range(start, end):
+            game = np.load(path + str(i).zfill(5) + '.npz')
+            x, p, v = game_to_data(game)
+            self.planes.extend(x)
+            self.policy.extend(p)
+            self.result.extend(v)
+        self.planes = torch.cat(self.planes, dim=0).to(device)
+        self.policy = torch.stack(self.policy).to(device)
+        self.result = torch.tensor(self.result,
+                                   dtype=torch.float32,
+                                   device=device)
+        # TODO: Mixed/half precision training
+
+    def __len__(self):
+        return len(self.result)
+
+    def __getitem__(self, idx):
+        # TODO: flip/rot augmentation
+        return self.planes[idx], (self.policy[idx], self.result[idx])
