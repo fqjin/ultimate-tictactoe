@@ -17,8 +17,10 @@ class NetTree(Tree):
         x = board_to_planes(self.board)
         with torch.no_grad():
             p, v = self.model(x.to(self.device))
-            p = p.exp()
-            p = p[0].cpu().numpy()
+            p = p.exp_()
+            p = torch.stack(torch.chunk(p, 3, dim=1), dim=1)
+            p = torch.stack(torch.chunk(p, 3, dim=3), dim=2)
+            p = p.view(9, 9).cpu().numpy()
             v = v.data.item()
         return self.add_dirichlet(p), v
 
