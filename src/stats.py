@@ -10,7 +10,7 @@ result_strings = {
 }
 
 
-def make_stats(p1, p2, name1, name2, out_name, num=500, kt1=False, kt2=False):
+def make_stats(p1, p2, name1, name2, out_name, num=500, kt1=True, kt2=True, temp=None):
     """Play games between two players and save stats
 
     P1 and P2 will play `num` rounds (two games as X and O)
@@ -25,15 +25,18 @@ def make_stats(p1, p2, name1, name2, out_name, num=500, kt1=False, kt2=False):
         num: number of rounds
         kt1: keep_tree for player 1
         kt2: keep_tree for player 2
+        temp: tuple of moves and invtemp. Default None
     """
     with open(f'../ordo/{out_name}.pgn', '+w') as pgn:
         for _ in tqdm(range(num)):
-            result, _ = play(p1, p2, verbose=False, press_enter=False, give_moves0=kt1, give_moves1=kt2)
+            result, _ = play(p1, p2, verbose=False, press_enter=False,
+                             give_moves0=kt1, give_moves1=kt2, temp=temp)
             pgn.write(f'[White "{name1}"]\n')
             pgn.write(f'[Black "{name2}"]\n')
             pgn.write(result_strings[result])
 
-            result, _ = play(p2, p1, verbose=False, press_enter=False, give_moves0=kt2, give_moves1=kt1)
+            result, _ = play(p2, p1, verbose=False, press_enter=False,
+                             give_moves0=kt2, give_moves1=kt1, temp=temp)
             pgn.write(f'[White "{name2}"]\n')
             pgn.write(f'[Black "{name1}"]\n')
             pgn.write(result_strings[result])

@@ -36,8 +36,8 @@ class NetPlayer(TreePlayer):
         self.treeargs = {'model': model, 'device': device, 'noise': noise}
         self.savelist = savelist
 
-    def get_move(self, board, moves=None):
-        retvalue = super().get_move(board, moves)
+    def get_move(self, board, moves=None, invtemp=None):
+        retvalue = super().get_move(board, moves, invtemp)
         if self.savelist is not None:
             N_grid = np.zeros((9, 9))
             for c, n in zip(self.t.children, self.t.N):

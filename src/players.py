@@ -6,12 +6,12 @@ from tree import Root, Tree
 
 
 class BasePlayer:
-    def get_move(self, board: BigBoard, moves=None):
+    def get_move(self, board: BigBoard, moves=None, invtemp=None):
         raise NotImplementedError
 
 
 class RandomPlayer(BasePlayer):
-    def get_move(self, board: BigBoard, moves=None):
+    def get_move(self, board: BigBoard, moves=None, invtemp=None):
         coords = np.nonzero(board.legal_moves)
         num_legal_moves = len(coords[0])
         move_index = randrange(num_legal_moves)
@@ -23,7 +23,7 @@ class ManualPlayer(BasePlayer):
 
     To quit, input -1 for tile
     """
-    def get_move(self, board: BigBoard, moves=None):
+    def get_move(self, board: BigBoard, moves=None, invtemp=None):
         while True:
             if len(board.sectors) > 1:
                 sector = int(input('Sector: '))
@@ -49,7 +49,7 @@ class TreePlayer(BasePlayer):
         self.treeargs = {}
         self.selfplay = selfplay
 
-    def get_move(self, board: BigBoard, moves=None):
+    def get_move(self, board: BigBoard, moves=None, invtemp=None):
         r = Root()
         if moves is None:
             self.t = self.treeclass(board, r, **self.treeargs)
@@ -78,7 +78,14 @@ class TreePlayer(BasePlayer):
             #     break
 
         if self.v_mode:  # for low nodes
-            index = np.argmax(self.t.sign * self.t.Q / self.t.N)
+            metric = self.t.sign * self.t.Q / self.t.N + 1.0
         else:
-            index = np.argmax(self.t.N)
+            metric = self.t.N /self.t.N.max()
+        if not invtemp:
+            index = np.argmax(metric)
+        else:
+            metric **= invtemp
+            metric /= metric.sum()
+            index = np.random.choice(range(len(metric)), p=metric)
+
         return self.t.children[index][:2]
