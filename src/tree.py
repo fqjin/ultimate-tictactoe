@@ -25,11 +25,13 @@ class Tree:
     def __init__(self,
                  board: BigBoard,
                  parent: Union['Tree', Root],
-                 parent_index=0):
+                 parent_index=0,
+                 noise=True):
         self.board = board
         self.sign = value_dict[self.board.mover + 1]  # (-1) ** self.board.mover
         self.parent = parent
         self.index = parent_index
+        self.noise = noise
         self.args = {}
 
         if self.board.result:
@@ -63,7 +65,10 @@ class Tree:
         self.terminal = np.zeros_like(self.P, dtype=np.bool)
 
     def get_p_and_v(self):
-        return self.add_dirichlet(self.get_p()), self.get_v()
+        if self.noise:
+            return self.add_dirichlet(self.get_p()), self.get_v()
+        else:
+            return self.get_p(), self.get_v()
 
     def get_v(self):
         v = self.board.states.count(1) - self.board.states.count(2)

@@ -6,12 +6,12 @@ from dataset import board_to_planes
 
 
 class NetTree(Tree):
-    def __init__(self, board, parent, parent_index=0, model=None, device='cpu'):
+    def __init__(self, board, parent, parent_index=0, model=None, device='cpu', noise=True):
         assert model is not None
         self.device = device
         self.model = model  # use a single model.eval().cuda() outside tree init
-        super().__init__(board, parent, parent_index)
-        self.args = {'device': device, 'model': model}
+        super().__init__(board, parent, parent_index, noise)
+        self.args = {'device': device, 'model': model, 'noise': noise}
 
     def get_p_and_v(self):
         x = board_to_planes(self.board)
@@ -22,15 +22,18 @@ class NetTree(Tree):
             p = torch.stack(torch.chunk(p, 3, dim=3), dim=2)
             p = p.view(9, 9).cpu().numpy()
             v = v.data.item()
-        return self.add_dirichlet(p), v
+        if self.noise:
+            p = self.add_dirichlet(p)
+        return p, v
 
 
 class NetPlayer(TreePlayer):
-    def __init__(self, nodes=0, v_mode=True, selfplay=False, model=None, device='cpu', savelist=None):
+    def __init__(self, nodes=0, v_mode=True, selfplay=False,
+                 model=None, device='cpu', noise=True, savelist=None):
         assert model is not None
         super().__init__(nodes, v_mode, selfplay)
         self.treeclass = NetTree
-        self.treeargs = {'model': model, 'device': device}
+        self.treeargs = {'model': model, 'device': device, 'noise': noise}
         self.savelist = savelist
 
     def get_move(self, board, moves=None):
