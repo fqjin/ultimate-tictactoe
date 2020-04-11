@@ -1,4 +1,5 @@
 import numpy as np
+import torch
 from network import UTTTNet
 from net_player import NetPlayer
 from play import play
@@ -6,9 +7,10 @@ from play import play
 
 def selfplay(nodes, number, model, device='cpu'):
     savelist = []
-    player = NetPlayer(nodes, v_mode=True, selfplay=True,
-                       model=model, device=device, savelist=savelist)
-    result, moves = play(player, player, verbose=False)
+    player = NetPlayer(nodes, v_mode=False, selfplay=True,
+                       model=model, device=device, noise=True,
+                       savelist=savelist)
+    result, moves = play(player, player, temp=(3, 0.5))
 
     savepath = '../selfplay/' + str(number).zfill(5)
     np.savez(savepath, result=result, moves=moves, visits=savelist)
@@ -22,6 +24,9 @@ if __name__ == '__main__':
         # Network is too small to see benefit of GPU
         # May need to implement batching (virtual MCTS).
         device = 'cpu'
-        m = UTTTNet().to(device).eval()
+        m = UTTTNet()
+        m.load_state_dict(torch.load(f'../models/from00000_50_500bs2048lr0.1d0.001e4.pt',
+                                     map_location=device))
+        m = m.to(device).eval()
         selfplay(1000, i, m, device)
 
