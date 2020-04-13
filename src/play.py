@@ -22,22 +22,22 @@ def play(player0: BasePlayer,
             input()
 
         if temp and len(moves) < temp[0]:
-            invtemp = temp[1]
+            args = {'invtemp': temp[1]}
         else:
-            invtemp = None
+            args = {}
 
         # TODO: Rewrite keep_tree logic better
         if game.mover:
             if give_moves1 and len(moves) > 3:
-                sector, tile = player1.get_move(game, moves=moves[-2:], invtemp=invtemp)
+                sector, tile = player1.get_move(game, moves=moves[-2:], **args)
             else:
-                sector, tile = player1.get_move(game, invtemp=invtemp)
+                sector, tile = player1.get_move(game, **args)
             # print(1, player1.t.N.sum() - len(player1.t.N))
         else:
             if give_moves0 and len(moves) > 2:
-                sector, tile = player0.get_move(game, moves=moves[-2:], invtemp=invtemp)
+                sector, tile = player0.get_move(game, moves=moves[-2:], **args)
             else:
-                sector, tile = player0.get_move(game, invtemp=invtemp)
+                sector, tile = player0.get_move(game, **args)
             # print(0, player0.t.N.sum() - len(player0.t.N))
 
         game.move(sector, tile)

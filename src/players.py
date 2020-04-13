@@ -80,7 +80,7 @@ class TreePlayer(BasePlayer):
         if self.v_mode:  # for low nodes
             metric = self.t.sign * self.t.Q / self.t.N + 1.0
         else:
-            metric = self.t.N /self.t.N.max()
+            metric = self.t.N / self.t.N.max()
         if not invtemp:
             index = np.argmax(metric)
         else:
