@@ -25,7 +25,7 @@ def board_to_planes(bigboard: BigBoard):
     legal = torch.cat(legal.chunk(3, dim=0), dim=2)
     legal = torch.cat(legal.chunk(3, dim=1), dim=3)
 
-    mover = torch.full((1, 1, 9, 9), bigboard.mover)
+    mover = torch.full((1, 1, 9, 9), 1 - 2*bigboard.mover)
     small_x = (boards == 1).float()
     small_o = (boards == 2).float()
 

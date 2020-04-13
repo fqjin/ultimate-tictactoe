@@ -15,7 +15,7 @@ def test_board_to_planes():
     planes = board_to_planes(a)
 
     assert planes.shape == (1, 8, 9, 9)
-    assert planes[0, 0, 2, 4] == 1  # mover 1
+    assert planes[0, 0, 2, 4] == -1  # mover O
     assert planes[0, 1].sum() == 2  # two X moves
     assert planes[0, 1, 1, 1] == 1  # X @ (0, 4)
     assert planes[0, 1, 8, 8] == 1  # X @ (8, 8)
