@@ -75,10 +75,10 @@ if __name__ == '__main__':
     p.add_argument('--t_tuple', type=int, nargs=2, default=(20, 200),
                    help='tuple for training data range')
     p.add_argument('--epochs', type=int, default=10)
-    p.add_argument('--batch_size', type=int, default=1024)
+    p.add_argument('--batch_size', type=int, default=2048)
     p.add_argument('--lr', type=float, default=0.1)
     p.add_argument('--momentum', type=float, default=0.9)
-    p.add_argument('--decay', type=float, default=1e-5)
+    p.add_argument('--decay', type=float, default=1e-3)
     p.add_argument('--weights', type=str, default='00000',
                    help='Path to starting weights')
 
