@@ -70,6 +70,8 @@ def main(args):
 
 if __name__ == '__main__':
     p = argparse.ArgumentParser()
+    # TODO: scramble training and validation data
+    #  otherwise validation is always older than training
     p.add_argument('--v_tuple', type=int, nargs=2, default=(0, 20),
                    help='tuple for validation data range')
     p.add_argument('--t_tuple', type=int, nargs=2, default=(20, 200),

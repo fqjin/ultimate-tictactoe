@@ -70,6 +70,7 @@ class TreePlayer(BasePlayer):
             except IndexError:
                 self.t = self.treeclass(board, r, **self.treeargs)
 
+        # TODO: Search nodes proportional to number of legal moves?
         # for _ in range(self.nodes):  # Disable node accumulation
         for _ in range(self.nodes - self.t.N.sum() + len(self.t.N)):
             self.t.explore()

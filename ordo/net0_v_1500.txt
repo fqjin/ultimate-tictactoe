@@ -1,0 +1,9 @@
+
+   # PLAYER                                            :  RATING  ERROR  POINTS  PLAYED   (%)  CFS(%)    W    D    L  D(%)
+   1 from00000_150_1500bs2048lr0.1d0.001e3             :   136.0   53.0   124.5     200    62      93  114   21   65    11
+   2 newplane_from00000_100_1000bs2048lr0.1d0.001e3    :    88.6   57.2   105.5     200    53     100   96   19   85    10
+   3 00000                                             :     0.0   ----    70.0     200    35     ---   57   26  117    13
+
+White advantage = -62.20 +/- 21.13
+Draw rate (equal opponents) = 11.66 % +/- 1.96
+
