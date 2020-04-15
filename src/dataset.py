@@ -69,7 +69,7 @@ def game_to_data(game):
 class GameDataset(Dataset):
     """Loads selfplay games"""
     def __init__(self, start, end, device='cpu', augment=False):
-        path = '../selfplay/'
+        path = '../selfplay/scramble/'
         self.augment = augment
         self.planes = []
         self.policy = []

@@ -17,7 +17,8 @@ ordo/MANUAL.pdf
 ordo/LICENSE.txt
 ordo/*.pgn
 ordo/groups.txt
-selfplay/
+selfplay/*
+!selfplay/scramble.py
 images/*
 !images/Game_Mouse.png
 models/*
