@@ -9,7 +9,7 @@ from network import UTTTNet
 
 
 def main(args):
-    logname = f'from{args.weights}_{args.t_tuple[0]}_{args.t_tuple[1]}' \
+    logname = f'{args.t_tuple[0]}_{args.t_tuple[1]}' \
               f'bs{args.batch_size}lr{args.lr}d{args.decay}e{args.epochs}'
     print(logname)
 
@@ -23,7 +23,7 @@ def main(args):
 
     t_dataset = GameDataset(args.t_tuple[0], args.t_tuple[1], device, augment=True)
     v_dataset = GameDataset(args.v_tuple[0], args.v_tuple[1], device, augment=False)
-    t_dataloader = DataLoader(t_dataset, batch_size=args.batch_size, shuffle=True)
+    t_dataloader = DataLoader(t_dataset, batch_size=args.batch_size, shuffle=True, drop_last=True)
     v_dataloader = DataLoader(v_dataset, batch_size=args.batch_size//8, shuffle=False)
 
     value_loss = nn.MSELoss()
