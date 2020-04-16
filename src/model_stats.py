@@ -30,7 +30,10 @@ if __name__ == '__main__':
     net1 = 'newplane_from00000_100_1000bs2048lr0.1d0.001e3'
     net2 = 'from00000_150_1500bs2048lr0.1d0.001e3'
     net3 = 'scr_dl_200_2000bs2048lr0.1d0.001e3'
-    model_vs_model(base, net3)
-    model_vs_model(net1, net3)
-    model_vs_model(net2, net3)
-    model_VN(net3)
+    net4 = '250_2500bs2048lr0.1d0.001e4'
+    new = net4
+    model_vs_model(base, new)
+    model_vs_model(net1, new)
+    model_vs_model(net2, new)
+    model_vs_model(net3, new)
+    model_VN(new)
