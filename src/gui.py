@@ -67,3 +67,24 @@ class GuiPlayer(BasePlayer):
 
         return self.return_value
 
+
+if __name__ == '__main__':
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--nodes', type=int, default=100)
+    parser.add_argument('--v_mode', type=int, default=0)
+    parser.add_argument('--noise', type=int, default=0)
+    args = parser.parse_args()
+
+    import torch
+    from network import UTTTNet
+    from play import play
+    from net_player import NetPlayer
+    m = UTTTNet()
+    m.load_state_dict(torch.load(f'../models/250_2500bs2048lr0.1d0.001e4.pt',
+                                 map_location='cpu'))
+    m = m.eval()
+    p1 = NetPlayer(nodes=args.nodes, v_mode=args.v_mode, model=m, noise=args.noise)
+    p2 = GuiPlayer(x=600)
+    play(p1, p2)
+    play(p2, p1)
