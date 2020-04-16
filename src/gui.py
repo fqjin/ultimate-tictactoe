@@ -27,7 +27,7 @@ class GuiPlayer(BasePlayer):
         self.return_value = (sector, tile)
         self.root.destroy()
 
-    def get_move(self, board: BigBoard, moves=None):
+    def get_move(self, board: BigBoard, moves=None, invtemp=None):
         self.root = tk.Tk()
         self.root.geometry(f"+{self.x}+{self.y}")
         font = tkFont.Font(root=self.root, family='Helvetica', size=14, weight=tkFont.BOLD)
