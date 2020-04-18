@@ -32,10 +32,12 @@ if __name__ == '__main__':
     net3 = 'scr_dl_200_2000bs2048lr0.1d0.001e3'
     net4 = '250_2500bs2048lr0.1d0.001e4'
     net5 = '300_3000bs2048lr0.1d0.001e4'
-    new = net5
-    # model_VN(new)
+    net6 = '350_3500bs2048lr0.1d0.001e5'
+    new = net6
+    model_VN(new)
     # model_vs_model(base, new)
-    model_vs_model(net1, new)
+    # model_vs_model(net1, new)
     model_vs_model(net2, new)
     model_vs_model(net3, new)
     model_vs_model(net4, new)
+    model_vs_model(net5, new)
