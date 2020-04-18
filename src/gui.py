@@ -40,6 +40,7 @@ class GuiPlayer(BasePlayer):
                 color = color_dict[board.states[sector]]
                 state = tk.DISABLED
             else:
+                # light yellow
                 color = '#ffff99' if sector in board.sectors else 'white'
                 if sector not in board.sectors or boards[sector][tile]:
                     state = tk.DISABLED
@@ -67,12 +68,24 @@ class GuiPlayer(BasePlayer):
 
         return self.return_value
 
+    def resulted(self, board: BigBoard, moves):
+        """Show the finished game board in gui"""
+        self.get_move(board, moves)
+
+
+def print_result(result, moves):
+    if result == 3:
+        print('Tie Game')
+    else:
+        print(f'{decode_dict[result]} Wins')
+    print(moves)
+
 
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument('--nodes', type=int, default=100)
-    parser.add_argument('--v_mode', type=int, default=0)
+    parser.add_argument('--v_mode', type=int, default=1)
     parser.add_argument('--noise', type=int, default=0)
     args = parser.parse_args()
 
@@ -80,11 +93,20 @@ if __name__ == '__main__':
     from network import UTTTNet
     from play import play
     from net_player import NetPlayer
+
+    name = '350_3500bs2048lr0.1d0.001e5'
+    print(f'Using {name} network')
+    string1 = f'Using {args.nodes} nodes in '
+    string2 = 'V mode ' if args.v_mode else 'N mode '
+    string3 = 'with noise' if args.noise else 'without noise'
+    print(string1 + string2 + string3)
+
     m = UTTTNet()
-    m.load_state_dict(torch.load(f'../models/250_2500bs2048lr0.1d0.001e4.pt',
+    m.load_state_dict(torch.load(f'../models/{name}.pt',
                                  map_location='cpu'))
     m = m.eval()
     p1 = NetPlayer(nodes=args.nodes, v_mode=args.v_mode, model=m, noise=args.noise)
     p2 = GuiPlayer(x=600)
-    play(p1, p2)
-    play(p2, p1)
+
+    print_result(*play(p1, p2))
+    print_result(*play(p2, p1))

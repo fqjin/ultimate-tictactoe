@@ -216,3 +216,4 @@ class BigBoard:
             self.legal_moves = self.get_legal_moves()
         else:
             self.legal_moves = None
+            self.sectors = ()

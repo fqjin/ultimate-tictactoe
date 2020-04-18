@@ -9,6 +9,9 @@ class BasePlayer:
     def get_move(self, board: BigBoard, moves=None, invtemp=None):
         raise NotImplementedError
 
+    def resulted(self, board: BigBoard, moves):
+        pass
+
 
 class RandomPlayer(BasePlayer):
     def get_move(self, board: BigBoard, moves=None, invtemp=None):

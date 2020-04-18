@@ -48,7 +48,8 @@ def play(player0: BasePlayer,
             game.draw()
 
         if game.result:
-            # TODO: if player is instance GuiPlayer, have gui show final board
+            player0.resulted(game, moves)
+            player1.resulted(game, moves)
             break
 
     if verbose:
