@@ -1,0 +1,8 @@
+
+   # PLAYER                          :  RATING  ERROR  POINTS  PLAYED   (%)  CFS(%)    W    D    L  D(%)
+   1 400_4000bs2048lr0.1d0.001e4     :     9.2   29.3    52.5     100    53      73   49    7   44     7
+   2 1400_4000bs2048lr0.1d0.001e5    :    -9.2   29.3    47.5     100    48     ---   44    7   49     7
+
+White advantage = 74.92 +/- 34.90
+Draw rate (equal opponents) = 7.18 % +/- 2.52
+

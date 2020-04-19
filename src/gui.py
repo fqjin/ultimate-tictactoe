@@ -93,8 +93,9 @@ if __name__ == '__main__':
     from network import UTTTNet
     from play import play
     from net_player import NetPlayer
+    from selfplay import best_net
 
-    name = '350_3500bs2048lr0.1d0.001e5'
+    name = best_net
     print(f'Using {name} network')
     string1 = f'Using {args.nodes} nodes in '
     string2 = 'V mode ' if args.v_mode else 'N mode '

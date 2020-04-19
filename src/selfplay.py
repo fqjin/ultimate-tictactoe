@@ -16,8 +16,11 @@ def selfplay(nodes, number, model, device='cpu'):
     np.savez(savepath, result=result, moves=moves, visits=savelist)
 
 
+best_net = '400_4000bs2048lr0.1d0.001e4'
+
+
 if __name__ == '__main__':
-    for i in range(3000, 3500):
+    for i in range(4000, 4500):
         # CPU is still faster than GPU
         # 2.42 ms (cpu) vs 2.86 ms (cuda) : 5b x 64f
         # 7.05 ms (cpu) vs 4.43 ms (cuda) : 10b x 128f
@@ -25,7 +28,7 @@ if __name__ == '__main__':
         # May need to implement batching (virtual MCTS).
         device = 'cpu'
         m = UTTTNet()
-        m.load_state_dict(torch.load(f'../models/300_3000bs2048lr0.1d0.001e4.pt',
+        m.load_state_dict(torch.load(f'../models/{best_net}.pt',
                                      map_location=device))
         m = m.to(device).eval()
         selfplay(1000, i, m, device)

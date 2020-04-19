@@ -24,7 +24,7 @@ def main(args):
     t_dataset = GameDataset(args.t_tuple[0], args.t_tuple[1], device, augment=True)
     v_dataset = GameDataset(args.v_tuple[0], args.v_tuple[1], device, augment=False)
     t_dataloader = DataLoader(t_dataset, batch_size=args.batch_size, shuffle=True, drop_last=True)
-    v_dataloader = DataLoader(v_dataset, batch_size=args.batch_size//8, shuffle=False)
+    v_dataloader = DataLoader(v_dataset, batch_size=args.batch_size//8, shuffle=True)
 
     value_loss = nn.MSELoss()
     optimizer = torch.optim.SGD(m.parameters(),
@@ -70,8 +70,6 @@ def main(args):
 
 if __name__ == '__main__':
     p = argparse.ArgumentParser()
-    # TODO: scramble training and validation data
-    #  otherwise validation is always older than training
     p.add_argument('--v_tuple', type=int, nargs=2, default=(0, 20),
                    help='tuple for validation data range')
     p.add_argument('--t_tuple', type=int, nargs=2, default=(20, 200),

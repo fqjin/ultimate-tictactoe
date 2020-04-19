@@ -1,0 +1,8 @@
+
+   # PLAYER    :  RATING  ERROR  POINTS  PLAYED   (%)  CFS(%)    W    D    L  D(%)
+   1 Vmode     :    50.5   29.3    64.0     100    64     100   57   14   29    14
+   2 Nmode     :   -50.5   29.3    36.0     100    36     ---   29   14   57    14
+
+White advantage = -15.22 +/- 34.85
+Draw rate (equal opponents) = 14.70 % +/- 3.80
+
