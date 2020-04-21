@@ -21,5 +21,6 @@ selfplay/*
 !selfplay/scramble.py
 images/*
 !images/Game_Mouse.png
+!images/Ordo.png
 models/*
 logs/*
