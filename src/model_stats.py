@@ -35,13 +35,15 @@ if __name__ == '__main__':
     net6 = '350_3500bs2048lr0.1d0.001e5'
     net7 = '400_4000bs2048lr0.1d0.001e4'
     net8 = '450_4500bs2048lr0.1d0.001e4'
-    new = net8
+    net9 = '500_5000bs2048lr0.1d0.001e4'
+    new = net9
     # model_vs_model(base, new)
     # model_vs_model(net1, new)
     # model_vs_model(net2, new)
     # model_vs_model(net3, new)
-    model_vs_model(net4, new)
+    # model_vs_model(net4, new)
     model_vs_model(net5, new)
     model_vs_model(net6, new)
     model_vs_model(net7, new)
+    model_vs_model(net8, new)
     model_VN(new)

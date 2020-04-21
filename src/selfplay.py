@@ -16,11 +16,11 @@ def selfplay(nodes, number, model, device='cpu'):
     np.savez(savepath, result=result, moves=moves, visits=savelist)
 
 
-best_net = '450_4500bs2048lr0.1d0.001e4'
+best_net = '500_5000bs2048lr0.1d0.001e4'
 
 
 if __name__ == '__main__':
-    for i in range(4500, 5000):
+    for i in range(5000, 5500):
         # CPU is still faster than GPU
         # 2.42 ms (cpu) vs 2.86 ms (cuda) : 5b x 64f
         # 7.05 ms (cpu) vs 4.43 ms (cuda) : 10b x 128f
