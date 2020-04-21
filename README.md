@@ -12,7 +12,7 @@ Run `gui.py` to play against a neural network.
 * A mini-board is finished when it is won by a player (3 in a row) or all tiles are taken (tie). A player can play in any mini-board if the one pointed to is finished.
 * The game is won when a player wins the big board (3 mini-boards in a row). Tied mini-boards do not count for either player. The game is tied when neither player can win the big board.
 
-## Selfplay strength estimates
+## Selfplay strength estimate
 <p>
-<img src="./images/Ordo.png" width="360" height="240">
+<img src="./images/Ordo.png" width="390" height="260">
 </p>
