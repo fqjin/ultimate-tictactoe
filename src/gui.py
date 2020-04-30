@@ -84,9 +84,12 @@ def print_result(result, moves):
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument('--nodes', type=int, default=100)
-    parser.add_argument('--v_mode', type=int, default=1)
-    parser.add_argument('--noise', type=int, default=0)
+    parser.add_argument('--nodes', type=int, default=100, 
+                        help='Number of nodes to search. Default 100')
+    parser.add_argument('--v_mode', type=int, default=1, 
+                        help='Select move with best value rather than visits. Default 1')
+    parser.add_argument('--noise', type=int, default=0, 
+                        help='Add Dirichlet noise to policy. Default 0')
     args = parser.parse_args()
 
     import torch
@@ -111,3 +114,5 @@ if __name__ == '__main__':
 
     print_result(*play(p1, p2))
     print_result(*play(p2, p1))
+    # from stats import make_stats
+    # make_stats(p1, p2, best_net, 'Felix', 'Felix_vs_net5000', num=4, temp=(3, 0.5))
