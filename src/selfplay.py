@@ -32,5 +32,6 @@ if __name__ == '__main__':
         m.load_state_dict(torch.load(f'../models/{best_net}.pt',
                                      map_location=device))
         m = m.to(device).eval()
+        # TODO: write a load_model function in network.py
         selfplay(1000, i, m, device)
 

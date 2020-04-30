@@ -1,5 +1,6 @@
 from engine import BigBoard, decode_dict
 from players import BasePlayer
+from time import time
 
 
 def play(player0: BasePlayer,
@@ -25,21 +26,19 @@ def play(player0: BasePlayer,
             args = {'invtemp': temp[1]}
         else:
             args = {}
-
+        # time1 = time()
         # TODO: Rewrite keep_tree logic better
         if game.mover:
             if give_moves1 and len(moves) > 3:
                 sector, tile = player1.get_move(game, moves=moves[-2:], **args)
             else:
                 sector, tile = player1.get_move(game, **args)
-            # print(1, player1.t.N.sum() - len(player1.t.N))
         else:
             if give_moves0 and len(moves) > 2:
                 sector, tile = player0.get_move(game, moves=moves[-2:], **args)
             else:
                 sector, tile = player0.get_move(game, **args)
-            # print(0, player0.t.N.sum() - len(player0.t.N))
-
+        # print(f'Time elapsed: {time()-time1:.2f}')
         game.move(sector, tile)
         moves.append((sector, tile))
 
