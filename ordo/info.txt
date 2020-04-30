@@ -1,2 +1,3 @@
 Get ordo from https://github.com/michiguel/Ordo/releases
+Run:
 .\ordo-win64.exe -a 0 -A "00000" -Q -D -W -J -s 100 -o net5000.txt -U "0,1,2,3,4,5,6,7,8,9,10" -- .\nets_0_1000_1500_2000_round_robin.pgn .\vs_net2500.pgn .\vs_net3000.pgn .\vs_net3500.pgn .\vs_net4000.pgn .\vs_net4500.pgn .\vs_net5000.pgn
