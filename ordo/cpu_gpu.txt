@@ -1,0 +1,9 @@
+
+   # PLAYER             :  RATING  ERROR  POINTS  PLAYED   (%)  CFS(%)    W    D    L  D(%)
+   1 GPU_Batch_x3.78    :   171.6   72.4    72.5     100    73     100   64   17   19    17
+   2 CPU                :     0.0   ----    88.0     200    44      99   73   30   97    15
+   3 GPU_Batch          :   -75.5   61.5    39.5     100    40     ---   33   13   54    13
+
+White advantage = -36.15 +/- 29.10
+Draw rate (equal opponents) = 16.36 % +/- 2.65
+
