@@ -15,6 +15,7 @@ value_dict = {
 
 class Root:
     def __init__(self):
+        self.v = 0
         self.N = [1]
         self.Q = [0.0]
         self.terminal = [0]
@@ -40,13 +41,13 @@ class Tree:
             self.parent.terminal[self.index] = True
             self.parent.Q[self.index] = self.v  # N always = 1 in this case
             return
-
         # TODO: Add logic for forcing moves
         #  However, it seems only having 1 move is relatively rare
         #  But it may help with progagating deeper info up the tree
-        # if np.sum(self.board.legal_moves):
-        #     pass
 
+        self.init_part2()
+
+    def init_part2(self):
         p_tmp, self.v = self.get_p_and_v()
         self.P = []
         self.children = []
