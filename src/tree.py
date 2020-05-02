@@ -20,6 +20,12 @@ class Root:
         self.Q = [0.0]
         self.terminal = [0]
 
+    def update(self):
+        pass
+
+    def increment(self):
+        pass
+
 
 class Tree:
     """Game Tree"""
