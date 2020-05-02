@@ -22,5 +22,6 @@ selfplay/*
 images/*
 !images/Game_Mouse.png
 !images/Ordo.png
+!images/Game2-8 Analysis.png
 models/*
 logs/*
