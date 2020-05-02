@@ -52,6 +52,13 @@ class TreePlayer(BasePlayer):
         self.treeargs = {}
         self.selfplay = selfplay
 
+    def explore_fn(self):
+        # TODO: Search nodes proportional to number of legal moves?
+        # nodes_left = self.nodes  # Allow nodes to accumulate
+        nodes_left = self.nodes - self.t.N.sum() + len(self.t.N)
+        for _ in range(nodes_left):
+            self.t.explore()
+
     def get_move(self, board: BigBoard, moves=None, invtemp=None):
         r = Root()
         if moves is None:
@@ -73,23 +80,18 @@ class TreePlayer(BasePlayer):
             except IndexError:
                 self.t = self.treeclass(board, r, **self.treeargs)
 
-        # TODO: Search nodes proportional to number of legal moves?
-        # for _ in range(self.nodes):  # Disable node accumulation
-        for _ in range(self.nodes - self.t.N.sum() + len(self.t.N)):
-            self.t.explore()
-            # if r.terminal[0]:  # Disable early stopping for selfplay games
-            #     # print('Solved')
-            #     break
+        self.explore_fn()
 
-        if self.v_mode:  # for low nodes
+        if self.v_mode:
             metric = self.t.sign * self.t.Q / self.t.N
-            metric -= metric.min()
         else:
             metric = self.t.N / self.t.N.max()
 
         if not invtemp:
             index = np.argmax(metric)
         else:
+            if self.v_mode:
+                metric -= metric.min()
             metric **= invtemp
             metric /= metric.sum()
             index = np.random.choice(range(len(metric)), p=metric)
