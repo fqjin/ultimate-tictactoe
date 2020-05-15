@@ -7,24 +7,16 @@ decode_dict = {
     2: 'O',
     3: 'T',
 }
-# TODO: Check if using tuples as keys rather than its hash is faster
-#  because the dictionary is presumably hashing its keys anyway!
-# 175 ns to hash board and access bit2board
-# 122 ns to access board2board without hash
-# Doesn't make big impact on final speed, but would simplify the code.
-bit2board_table = {hash(indices): indices
-                   for indices in np.ndindex(*[4] * 9)}
+all_boards = list(np.ndindex(*[4] * 9))
 
 FULL_HOUSE = tuple(range(9))
 ZERO_BOARD = (0,) * 9
 ONES_BOARD = (1,) * 9
-ZERO_BIT = hash(ZERO_BOARD)
-ONES_BIT = hash(ONES_BOARD)
-TWOS_BIT = hash((2,) * 9)
-DRAW_BIT = hash((3,) * 9)
-BIT_LIST = (ZERO_BIT, ONES_BIT, TWOS_BIT, DRAW_BIT)
-TEST_BIT = hash((2, 1, 1, 0, 1, 0, 1, 2, 2))
-TEST_BIT2 = hash((0, 0, 1, 2, 2, 0, 0, 1, 1))
+TWOS_BOARD = (2,) * 9
+DRAW_BOARD = (3,) * 9
+BOARD_LIST = (ZERO_BOARD, ONES_BOARD, TWOS_BOARD, DRAW_BOARD)
+TEST_BOARD = (2, 1, 1, 0, 1, 0, 1, 2, 2)
+TEST_BOARD2 = (0, 0, 1, 2, 2, 0, 0, 1, 1)
 
 
 def draw_board(board):
@@ -91,37 +83,33 @@ def get_result(board):
     return result_list[1] + 2 * result_list[2]
 
 
-big_result_table = {bit: get_result(board)
-                    for bit, board in bit2board_table.items()}
+big_result_table = {board: get_result(board) for board in all_boards}
 result_table = {}
-for bit, board in bit2board_table.items():
+for board, result in big_result_table.items():
     if 3 in board:
         continue
-    result = big_result_table[bit]
     if result == 3 and 0 in board:
-        result_table[bit] = 0
+        # board is drawn but still has legal moves
+        result_table[board] = 0
     else:
-        result_table[bit] = result
+        result_table[board] = result
 
 
 def make_move_table(move_index):
-    """Returns mapping of bits to bits after move"""
+    """Returns mapping of boards to boards after a move"""
+    # Move_table might still be useful because tuples are immutable
     table_1 = {}
     table_2 = {}
-    for bit, board in bit2board_table.items():
-        if 3 in board:
-            continue
-        result = big_result_table[bit]
-        if result and not (result == 3 and 0 in board):
+    for board, result in result_table.items():
+        if result:
             continue
         if board[move_index] != 0:
             continue
-        else:
-            tmp = list(board)
-            tmp[move_index] = 1
-            table_1[bit] = hash(tuple(tmp))
-            tmp[move_index] = 2
-            table_2[bit] = hash(tuple(tmp))
+        tmp = list(board)
+        tmp[move_index] = 1
+        table_1[board] = tuple(tmp)
+        tmp[move_index] = 2
+        table_2[board] = tuple(tmp)
     return table_1, table_2
 
 
@@ -129,32 +117,30 @@ full_move_table = [make_move_table(i) for i in range(9)]
 
 
 legal_moves_table = {}
-for bit, board in bit2board_table.items():
-    if 3 in board:
-        continue
-    if not result_table[bit]:
-        legal_moves_table[bit] = tuple(not board[i] for i in range(9))
+for board, result in result_table.items():
+    if not result:
+        legal_moves_table[board] = tuple(not board[i] for i in range(9))
 
 
 class BigBoard:
     """UTTT Board"""
-    def __init__(self, bits=(ZERO_BIT,)*9, mover=0, sectors=FULL_HOUSE):
-        self.bits = list(bits)
+    def __init__(self, boards=(ZERO_BOARD,) * 9, mover=0, sectors=FULL_HOUSE):
+        self.boards = list(boards)
         self.mover = mover
         self.sectors = sectors
         # Sacrifice drawn incomplete sector propagation
         # to eliminate need for a secret_state
-        self.states = [result_table[b] for b in self.bits]
-        self.result = big_result_table[hash(tuple(self.states))]
+        self.states = [result_table[b] for b in self.boards]
+        self.result = big_result_table[tuple(self.states)]
         if not self.result:
             self.legal_moves = self.get_legal_moves()
         else:
             self.legal_moves = None
 
     def copy(self):
-        # Directly copying attributes saves some function calls
+        # Directly copying attributes saves some lookups/calls
         board = BigBoard.__new__(BigBoard)
-        board.bits = self.bits.copy()
+        board.boards = self.boards.copy()
         board.mover = self.mover
         board.sectors = self.sectors
         board.states = self.states.copy()
@@ -164,8 +150,7 @@ class BigBoard:
 
     def draw(self):
         """Draws 9x9 BigBoard"""
-        boards = [bit2board_table[b] for b in self.bits]
-        chars = [[decode_dict[v] for v in board] for board in boards]
+        chars = [[decode_dict[v] for v in b] for b in self.boards]
         rows = [chars[3*i][3*j:3*j+3] +
                 chars[3*i+1][3*j:3*j+3] +
                 chars[3*i+2][3*j:3*j+3] for i, j in np.ndindex(3, 3)]
@@ -195,24 +180,22 @@ class BigBoard:
     def get_legal_moves(self):
         """Returns list of tuples of ones and zeros describing legal moves"""
         return [ZERO_BOARD if i not in self.sectors or self.states[i]
-                else legal_moves_table[self.bits[i]] for i in range(9)]
+                else legal_moves_table[self.boards[i]] for i in range(9)]
 
     def move(self, sector, tile):
-        """Mover places tile at sector and tile location"""
         if not self.legal_moves[sector][tile]:
             raise ValueError(f'Illegal move at sector {sector}, tile {tile}')
-        # Update bits
-        self.bits[sector] = full_move_table[tile][self.mover][self.bits[sector]]
+        # Update boards
+        self.boards[sector] = full_move_table[tile][self.mover][self.boards[sector]]
         # Update states
-        new_state = result_table[self.bits[sector]]
+        new_state = result_table[self.boards[sector]]
         if new_state:
             self.states[sector] = new_state
-            self.result = big_result_table[hash(tuple(self.states))]
-        # Update other attributes
+            self.result = big_result_table[tuple(self.states)]
+        # Update mover
         self.mover = 1 - self.mover
+        # Update legal sectors
         if self.states[tile]:
-            # Sectors describes which sectors are allowed
-            # Legal moves then removes sections with determined state
             self.sectors = FULL_HOUSE
         else:
             self.sectors = (tile,)
