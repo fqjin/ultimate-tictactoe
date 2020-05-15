@@ -61,7 +61,8 @@ def main(args):
         print('Train loss {:.3f}'.format(np.mean(t_loss[-t_len:])))
         print('Valid loss {:.3f}'.format(np.mean(v_loss[-t_len:])))
 
-    torch.save(m.state_dict(), f'../models/{logname}.pt')
+        torch.save(m.state_dict(), f'../models/{logname}_e{epoch}.pt')
+        
     np.savez('../logs/' + logname,
              t_loss=t_loss,
              v_loss=v_loss,
