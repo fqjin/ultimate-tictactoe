@@ -2,9 +2,10 @@ import numpy as np
 import torch
 from torch.nn.functional import interpolate
 from torch.utils.data import Dataset
+from random import getrandbits
+from tqdm import tqdm
 from engine import BigBoard
 from tree import value_dict
-from random import getrandbits
 
 
 def board_to_planes(bigboard: BigBoard):
@@ -73,7 +74,7 @@ class GameDataset(Dataset):
         self.planes = []
         self.policy = []
         self.result = []
-        for i in range(start, end):
+        for i in tqdm(range(start, end)):
             game = np.load(path + str(i).zfill(5) + '.npz')
             x, p, v = game_to_data(game)
             self.planes.extend(x)
