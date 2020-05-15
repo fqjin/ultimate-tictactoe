@@ -2,7 +2,7 @@ import numpy as np
 import torch
 from torch.nn.functional import interpolate
 from torch.utils.data import Dataset
-from engine import BigBoard, bit2board_table
+from engine import BigBoard
 from tree import value_dict
 from random import getrandbits
 
@@ -16,8 +16,7 @@ def board_to_planes(bigboard: BigBoard):
 
     Return shape: (1, 8, 9, 9)
     """
-    boards = [bit2board_table[b] for b in bigboard.bits]
-    boards = torch.tensor(boards).view(3, 3, 3, 3)
+    boards = torch.tensor(bigboard.boards).view(3, 3, 3, 3)
     boards = torch.cat(boards.chunk(3, dim=0), dim=2)
     boards = torch.cat(boards.chunk(3, dim=1), dim=3)
 

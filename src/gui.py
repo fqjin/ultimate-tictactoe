@@ -2,7 +2,7 @@ import tkinter as tk
 import tkinter.font as tkFont
 import numpy as np
 from players import BasePlayer, BigBoard
-from engine import bit2board_table, decode_dict
+from engine import decode_dict
 
 
 coords_dict = {}
@@ -28,12 +28,12 @@ class GuiPlayer(BasePlayer):
         self.root.destroy()
 
     def get_move(self, board: BigBoard, moves=None, invtemp=None):
+        # TODO: Refactor board: BigBoard -> bigboard: BigBoard
         self.root = tk.Tk()
         self.root.geometry(f"+{self.x}+{self.y}")
         font = tkFont.Font(root=self.root, family='Helvetica', size=14, weight=tkFont.BOLD)
         frame = tk.Frame(self.root)
         frame.pack(fill='both', expand=1)
-        boards = [bit2board_table[b] for b in board.bits]
         buttons = {}
         for sector, tile in np.ndindex(9, 9):
             if board.states[sector]:
@@ -42,7 +42,7 @@ class GuiPlayer(BasePlayer):
             else:
                 # light yellow
                 color = '#ffff99' if sector in board.sectors else 'white'
-                if sector not in board.sectors or boards[sector][tile]:
+                if sector not in board.sectors or board.boards[sector][tile]:
                     state = tk.DISABLED
                 else:
                     state = tk.NORMAL
@@ -50,7 +50,7 @@ class GuiPlayer(BasePlayer):
                 if (sector, tile) == moves[-1]:
                     color = '#ff9966'  # light orange
             b = tk.Button(frame,
-                          text=decode_dict[boards[sector][tile]],
+                          text=decode_dict[board.boards[sector][tile]],
                           command=lambda sector=sector, tile=tile: self.pressed(sector, tile),
                           state=state,
                           disabledforeground='black',
