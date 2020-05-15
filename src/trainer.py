@@ -45,7 +45,7 @@ def main(args):
             optimizer.zero_grad()
             p, v = m(x)
             loss = value_loss(v, y_v) - torch.mean(y_p * p)  # p is log prob, y_p is not
-            t_loss.append(loss.data.item())
+            t_loss.append(loss.item())
             loss.backward()
             optimizer.step()
 
@@ -55,7 +55,7 @@ def main(args):
                 for x, (y_p, y_v) in v_dataloader:
                     p, v = m(x)
                     loss = value_loss(v, y_v) - torch.mean(y_p * p)  # p is log prob, y_p is not
-                    running_loss += loss.data.item()
+                    running_loss += loss.item()
             v_loss.append(running_loss / v_len)
 
         print('Train loss {:.3f}'.format(np.mean(t_loss[-t_len:])))

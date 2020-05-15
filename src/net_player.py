@@ -21,7 +21,7 @@ class NetTree(Tree):
             p = torch.stack(torch.chunk(p, 3, dim=1), dim=1)
             p = torch.stack(torch.chunk(p, 3, dim=3), dim=2)
             p = p.view(9, 9).cpu().numpy()
-            v = v.data.item()
+            v = v.item()
         if self.noise:
             p = self.add_dirichlet(p)
         return p, v
