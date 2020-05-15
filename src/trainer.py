@@ -37,6 +37,7 @@ def main(args):
     v_loss = []
     t_len = len(t_dataloader)
     v_len = len(v_dataloader)
+    v_counter = 0
     for epoch in range(args.epochs):
         print('-' * 10)
         print(f'Epoch: {epoch}')
@@ -49,20 +50,22 @@ def main(args):
             loss.backward()
             optimizer.step()
 
-            m.eval()
-            running_loss = 0.0
-            with torch.no_grad():
-                for x, (y_p, y_v) in v_dataloader:
-                    p, v = m(x)
-                    loss = value_loss(v, y_v) - torch.mean(y_p * p)  # p is log prob, y_p is not
-                    running_loss += loss.item()
-            v_loss.append(running_loss / v_len)
+            v_counter += 1
+            if v_counter % 10 == 0:
+                m.eval()
+                running_loss = 0.0
+                with torch.no_grad():
+                    for x, (y_p, y_v) in v_dataloader:
+                        p, v = m(x)
+                        loss = value_loss(v, y_v) - torch.mean(y_p * p)
+                        running_loss += loss.item()
+                v_loss.append(running_loss / v_len)
 
         print('Train loss {:.3f}'.format(np.mean(t_loss[-t_len:])))
-        print('Valid loss {:.3f}'.format(np.mean(v_loss[-t_len:])))
+        print('Valid loss {:.3f}'.format(np.mean(v_loss[-t_len//10:])))
 
         torch.save(m.state_dict(), f'../models/{logname}_e{epoch}.pt')
-        
+
     np.savez('../logs/' + logname,
              t_loss=t_loss,
              v_loss=v_loss,
