@@ -39,22 +39,27 @@ def draw_board(board):
 
 
 def check_row(row, result_list):
-    """Gets result of row
+    """Calculates result of row
 
     Args:
         row: 3-tuple
-        result_list: list of draw_counter, p1, p2.
+        result_list: 3-list of draw_counter, p1, p2.
             List will be modified by this function.
     """
     if 3 in row:
+        # draw b/c draw tile
         result_list[0] += 1
     elif 1 in row and 2 in row:
+        # draw b/c both X and O tiles
         result_list[0] += 1
     elif 0 in row:
+        # not win b/c empty tile
         pass
     elif row[0] == 1:
+        # X wins
         result_list[1] = 1
-    else:  # row[0] == 2
+    else:
+        # O wins
         result_list[2] = 1
 
 
