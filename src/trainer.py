@@ -40,7 +40,7 @@ def main(args):
     v_counter = 0
     for epoch in range(args.epochs):
         print('-' * 10)
-        print(f'Epoch: {epoch}')
+        print(f'Epoch: {epoch+1}')
         for x, (y_p, y_v) in tqdm(t_dataloader):
             m.train()
             optimizer.zero_grad()

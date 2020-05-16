@@ -40,7 +40,8 @@ if __name__ == '__main__':
     net9 = '500_5000bs2048lr0.1d0.001e4'
     net10 = '600_6000bs2048lr0.1d0.001e4'
     net11 = '700_7000bs2048lr0.1d0.001e4'
-    new = net11
+    net12 = '800_8000bs2048lr0.1d0.001e4'
+    new = net12
     # model_vs_model(base, new, device=device)
     # model_vs_model(net1, new, device=device)
     # model_vs_model(net2, new, device=device)
@@ -48,8 +49,9 @@ if __name__ == '__main__':
     # model_vs_model(net4, new, device=device)
     # model_vs_model(net5, new, device=device)
     # model_vs_model(net6, new, device=device)
-    model_vs_model(net7, new, device=device)
+    # model_vs_model(net7, new, device=device)
     model_vs_model(net8, new, device=device)
     model_vs_model(net9, new, device=device)
     model_vs_model(net10, new, device=device)
+    model_vs_model(net11, new, device=device)
     model_VN(new, device=device)
