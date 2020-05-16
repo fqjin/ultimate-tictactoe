@@ -16,7 +16,7 @@ def selfplay(nodes, number, model, device='cpu'):
     np.savez(savepath, result=result, moves=moves, visits=savelist)
 
 
-best_net = '800_8000bs2048lr0.1d0.001e4'
+best_net = '900_9000bs2048lr0.1d0.001e5'
 
 
 if __name__ == '__main__':
