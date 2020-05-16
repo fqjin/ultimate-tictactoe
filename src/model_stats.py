@@ -38,7 +38,7 @@ if __name__ == '__main__':
     net7 = '400_4000bs2048lr0.1d0.001e4'
     net8 = '450_4500bs2048lr0.1d0.001e4'
     net9 = '500_5000bs2048lr0.1d0.001e4'
-    net10 = '600_6000bs2048lr0.1d0.001e4_e3'
+    net10 = '600_6000bs2048lr0.1d0.001e4'
     new = net10
     # model_vs_model(base, new, device=device)
     # model_vs_model(net1, new, device=device)

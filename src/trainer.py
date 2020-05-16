@@ -10,7 +10,7 @@ from network import UTTTNet
 
 def main(args):
     logname = f'{args.t_tuple[0]}_{args.t_tuple[1]}' \
-              f'bs{args.batch_size}lr{args.lr}d{args.decay}e{args.epochs}'
+              f'bs{args.batch_size}lr{args.lr}d{args.decay}'
     print(logname)
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -64,9 +64,9 @@ def main(args):
         print('Train loss {:.3f}'.format(np.mean(t_loss[-t_len:])))
         print('Valid loss {:.3f}'.format(np.mean(v_loss[-t_len//10:])))
 
-        torch.save(m.state_dict(), f'../models/{logname}_e{epoch}.pt')
+        torch.save(m.state_dict(), f'../models/{logname}e{epoch+1}.pt')
 
-    np.savez('../logs/' + logname,
+    np.savez(f'../logs/{logname}e{args.epochs}',
              t_loss=t_loss,
              v_loss=v_loss,
              params=args)
