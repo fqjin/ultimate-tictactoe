@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-nohup python selfplay.py --range 9000 9250 &
-nohup python selfplay.py --range 9250 9500 &
-nohup python selfplay.py --range 9500 9750 &
-nohup python selfplay.py --range 9750 10000 &
+nohup python selfplay.py --range 10000 10250 &
+nohup python selfplay.py --range 10250 10500 &
+nohup python selfplay.py --range 10500 10750 &
+nohup python selfplay.py --range 10750 11000 &
