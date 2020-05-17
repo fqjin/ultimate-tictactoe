@@ -95,7 +95,7 @@ if __name__ == '__main__':
     import torch
     from network import UTTTNet
     from play import play
-    from net_player import NetPlayer
+    from net_player import BatchNetPlayer
     from selfplay import best_net
 
     name = best_net
@@ -109,10 +109,10 @@ if __name__ == '__main__':
     m.load_state_dict(torch.load(f'../models/{name}.pt',
                                  map_location='cpu'))
     m = m.eval()
-    p1 = NetPlayer(nodes=args.nodes, v_mode=args.v_mode, model=m, noise=args.noise)
+    p1 = BatchNetPlayer(nodes=args.nodes, v_mode=args.v_mode, model=m, noise=args.noise)
     p2 = GuiPlayer(x=600)
 
     print_result(*play(p1, p2))
     print_result(*play(p2, p1))
     # from stats import make_stats
-    # make_stats(p1, p2, best_net, 'Felix', 'Felix_vs_net5000', num=4, temp=(3, 0.5))
+    # make_stats(p1, p2, best_net, 'Felix', 'Felix_vs_net10000', num=4, temp=(3, 0.5))
