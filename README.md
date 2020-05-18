@@ -1,4 +1,4 @@
-## Selfplay reinforcement learning neural network <br/> for playing Ultimate Tic-Tac-Toe (UTTT)
+## Selfplay reinforcement learning <br/> for Ultimate Tic-Tac-Toe (UTTT)
 <p>
 <img src="./images/Game_Mouse.png" width="392" height="412">
 </p>
