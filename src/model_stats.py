@@ -53,6 +53,7 @@ if __name__ == '__main__':
         '1200_12000bs2048lr0.1d0.001e5',
         '1300_13000bs2048lr0.1d0.001e5',
         '1400_14000bs2048lr0.1d0.001e6',
+        '1500_15000bs2048lr0.1d0.001e7',
     ]
     if args.flag == 0:
         model_vs_model(nets[-5], nets[-1], device=device)
