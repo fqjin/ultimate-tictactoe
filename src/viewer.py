@@ -9,6 +9,8 @@ from gui import coords_dict, color_dict
 
 
 class GameViewer:
+    # TODO: Load game dialog
+    # TODO: Playout lines
     def __init__(self, moves, evals=None, name='', x=0, y=0):
         self.moves = moves.tolist()
         if evals is not None:
