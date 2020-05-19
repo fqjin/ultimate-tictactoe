@@ -1,8 +1,8 @@
 import tkinter as tk
 import tkinter.font as tkFont
 import numpy as np
-from players import BasePlayer, BigBoard
-from engine import decode_dict
+from players import BasePlayer
+from engine import decode_dict, BigBoard
 
 
 coords_dict = {}
@@ -31,6 +31,7 @@ class GuiPlayer(BasePlayer):
         # TODO: Refactor board: BigBoard -> bigboard: BigBoard
         self.root = tk.Tk()
         self.root.geometry(f"+{self.x}+{self.y}")
+        self.root.title('UTTT Gui Player')
         font = tkFont.Font(root=self.root, family='Helvetica', size=14, weight=tkFont.BOLD)
         frame = tk.Frame(self.root)
         frame.pack(fill='both', expand=1)
