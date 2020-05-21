@@ -31,7 +31,7 @@ class GuiPlayer(BasePlayer):
         # TODO: Refactor board: BigBoard -> bigboard: BigBoard
         self.root = tk.Tk()
         self.root.geometry(f"+{self.x}+{self.y}")
-        self.root.title('UTTT Gui Player')
+        self.root.title(f'UTTT Gui Player - {decode_dict[board.mover+1]} to move')
         font = tkFont.Font(root=self.root, family='Helvetica', size=14, weight=tkFont.BOLD)
         frame = tk.Frame(self.root)
         frame.pack(fill='both', expand=1)

@@ -18,7 +18,7 @@
 </p>
 
 ## Game Viewer
-Use `viewer.py` to view and analyze UTTT games.
+**Use `viewer.py` to view and analyze UTTT games.**
 <p>
 <img src="./images/GameViewer.png" width="511" height="290">
 </p>
