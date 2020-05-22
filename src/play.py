@@ -1,5 +1,6 @@
 from engine import BigBoard, decode_dict
 from players import BasePlayer
+from net_player import NetPlayer
 from time import time
 
 
@@ -15,6 +16,7 @@ def play(player0: BasePlayer,
     if game is None:
         game = BigBoard()
     moves = []
+    evals = []
     if verbose:
         game.draw()
 
@@ -41,9 +43,16 @@ def play(player0: BasePlayer,
         # print(f'Time elapsed: {time()-time1:.2f}')
         game.move(sector, tile)
         moves.append((sector, tile))
+        if isinstance(player0, NetPlayer):
+            if game.mover:
+                evals.append(player0.t.v)
+            else:
+                evals.append(player1.t.v)
 
         if verbose:
             print(f'{decode_dict[2-game.mover]} @ {sector}, {tile}')
+            if evals:
+                print(f'{decode_dict[2-game.mover]} eval: {evals[-1]}')
             game.draw()
 
         if game.result:
@@ -58,4 +67,4 @@ def play(player0: BasePlayer,
         else:
             print(f'{decode_dict[game.result]} Wins')
 
-    return game.result, moves
+    return game.result, moves, evals

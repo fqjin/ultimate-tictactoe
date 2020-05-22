@@ -4,7 +4,9 @@ from network import UTTTNet
 from net_player import BatchNetPlayer
 
 
-def model_vs_model(weights1, weights2, device='cpu', nodes=100, ):
+def model_vs_model(weights1, weights2, device='cpu',
+                   nodes=100, num=50, temp=(3, 0.5),
+                   save=False):
     m1 = UTTTNet()
     m2 = UTTTNet()
     m1.load_state_dict(torch.load(f'../models/{weights1}.pt', map_location=device))
@@ -13,10 +15,11 @@ def model_vs_model(weights1, weights2, device='cpu', nodes=100, ):
     m2.to(device).eval()
     p1 = BatchNetPlayer(nodes=nodes, v_mode=True, model=m1, device=device, noise=False)
     p2 = BatchNetPlayer(nodes=nodes, v_mode=True, model=m2, device=device, noise=False)
-    make_stats(p1, p2, weights1, weights2, weights1+'_vs_'+weights2, num=50, temp=(3, 0.5))
+    make_stats(p1, p2, weights1, weights2, weights1+'_vs_'+weights2,
+               num=num, temp=temp, save=save)
 
 
-def model_VN(weights1, device='cpu', nodes=100, ):
+def model_VN(weights1, device='cpu', nodes=100):
     m = UTTTNet()
     m.load_state_dict(torch.load(f'../models/{weights1}.pt', map_location=device))
     m.to(device).eval()
@@ -65,5 +68,8 @@ if __name__ == '__main__':
         model_vs_model(nets[-2], nets[-1], device=device)
     elif args.flag == 4:
         model_VN(nets[-1], device=device)
+    elif args.flag == 5:
+        model_vs_model(nets[-1], nets[-11], device=device,
+                       num=1, nodes=10000, temp=(2, 0.5), save=True)
     else:
         raise ValueError(f'args.flag is {args.flag}')
