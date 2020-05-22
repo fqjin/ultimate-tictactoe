@@ -74,12 +74,13 @@ class GuiPlayer(BasePlayer):
         self.get_move(board, moves)
 
 
-def print_result(result, moves):
+def print_result(result, moves, evals):
     if result == 3:
         print('Tie Game')
     else:
         print(f'{decode_dict[result]} Wins')
     print(moves)
+    print(evals)
 
 
 if __name__ == '__main__':

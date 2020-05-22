@@ -43,11 +43,10 @@ def play(player0: BasePlayer,
         # print(f'Time elapsed: {time()-time1:.2f}')
         game.move(sector, tile)
         moves.append((sector, tile))
-        if isinstance(player0, NetPlayer):
-            if game.mover:
-                evals.append(player0.t.v)
-            else:
-                evals.append(player1.t.v)
+        if isinstance(player0, NetPlayer) and game.mover:
+            evals.append(player0.t.v)
+        elif isinstance(player1, NetPlayer):
+            evals.append(player1.t.v)
 
         if verbose:
             print(f'{decode_dict[2-game.mover]} @ {sector}, {tile}')
