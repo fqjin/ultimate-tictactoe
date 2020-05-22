@@ -122,5 +122,6 @@ class GameViewer:
 
 if __name__ == '__main__':
     name = 'net5000_vs_net15000_10k_game0'
+    # name = '../selfplay/15997'
     game = np.load('../games/' + name + '.npz')
     GameViewer(game['moves'], game['evals'], name)
