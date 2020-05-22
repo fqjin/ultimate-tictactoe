@@ -32,6 +32,7 @@ if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument('--flag', type=int, required=True)
+    parser.add_argument('--e', type=int, required=True)
     args = parser.parse_args()
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -58,7 +59,9 @@ if __name__ == '__main__':
         '1400_14000bs2048lr0.1d0.001e6',
         '1500_15000bs2048lr0.1d0.001e7',
         '1600_16000bs2048lr0.1d0.001e6',
+        '1700_17000bs2048lr0.1d0.001e5',
     ]
+    nets[-1] = nets[-1][:-1] + str(args.e)
     if args.flag == 0:
         model_vs_model(nets[-5], nets[-1], device=device)
     elif args.flag == 1:
