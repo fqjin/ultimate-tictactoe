@@ -11,12 +11,13 @@ from gui import coords_dict, color_dict
 class GameViewer:
     # TODO: Load game dialog
     # TODO: Playout lines
-    def __init__(self, moves, evals=None, name='', x=0, y=0):
+    def __init__(self, moves, evals=None, name='', plot_style='-', x=0, y=0):
         self.moves = moves.tolist()
         if evals is not None:
             self.evals = evals.tolist()
         else:
             self.evals = [0.0] * len(moves)
+        self.plot_style = plot_style
         self.x = x
         self.y = y
 
@@ -63,7 +64,7 @@ class GameViewer:
                                )
         idx = 1
         self.slider.set(idx)
-        self.slider.pack(fill=tk.X)
+        self.slider.pack()
 
         self.fig = Figure(figsize=(5, 3), dpi=100)
         self.fig.set_tight_layout(True)
@@ -91,8 +92,8 @@ class GameViewer:
 
     def plot_eval(self, idx):
         self.ax.clear()
-        self.ax.plot(self.arange0, self.evals0)
-        self.ax.plot(self.arange1, self.evals1)
+        self.ax.plot(self.arange0, self.evals0, self.plot_style)
+        self.ax.plot(self.arange1, self.evals1, self.plot_style)
         self.ax.plot(self.zeros, zorder=0)
         self.ax.plot([idx, idx], [-1.0, 1.0], zorder=0)
         self.ax.set_ylabel('Eval')
