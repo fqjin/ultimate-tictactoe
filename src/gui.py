@@ -111,10 +111,11 @@ if __name__ == '__main__':
     m.load_state_dict(torch.load(f'../models/{name}.pt',
                                  map_location='cpu'))
     m = m.eval()
-    p1 = BatchNetPlayer(nodes=args.nodes, v_mode=args.v_mode, model=m, noise=args.noise)
-    p2 = GuiPlayer(x=600)
+    p1 = GuiPlayer(x=600)
+    p2 = BatchNetPlayer(nodes=args.nodes, v_mode=args.v_mode, model=m, noise=args.noise)
 
-    print_result(*play(p1, p2))
-    print_result(*play(p2, p1))
-    # from stats import make_stats
-    # make_stats(p1, p2, best_net, 'Felix', 'Felix_vs_net10000', num=4, temp=(3, 0.5))
+    # print_result(*play(p1, p2))
+    # print_result(*play(p2, p1))
+    from stats import make_stats
+    make_stats(p1, p2, 'Felix', best_net, 'Felix_vs_net20000',
+               num=4, temp=(3, 0.5), save=True)
