@@ -53,7 +53,9 @@ class TreePlayer(BasePlayer):
         self.selfplay = selfplay
 
     def explore_fn(self):
-        # TODO: Search nodes proportional to number of legal moves?
+        # Search nodes proportional to number of legal moves
+        # is weaker than regular mode (100% CFS).
+        # TODO: Need a smarter system like KLD_Gain.
         # nodes_left = self.nodes  # Allow nodes to accumulate
         nodes_left = self.nodes - self.t.N.sum() + len(self.t.N)
         for _ in range(nodes_left):
