@@ -45,8 +45,10 @@ def play(player0: BasePlayer,
         moves.append((sector, tile))
         if isinstance(player0, NetPlayer) and game.mover:
             evals.append(player0.t.v)
-        elif isinstance(player1, NetPlayer):
+        elif isinstance(player1, NetPlayer) and not game.mover:
             evals.append(player1.t.v)
+        else:
+            evals.append(0.0)
 
         if verbose:
             print(f'{decode_dict[2-game.mover]} @ {sector}, {tile}')
@@ -55,6 +57,7 @@ def play(player0: BasePlayer,
             game.draw()
 
         if game.result:
+            evals[-1] = ((game.result + 1) % 3) - 1
             player0.resulted(game, moves)
             player1.resulted(game, moves)
             break
