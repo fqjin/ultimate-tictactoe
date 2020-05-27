@@ -10,13 +10,13 @@ def selfplay(nodes, number, model, device='cpu'):
     player = BatchNetPlayer(nodes, v_mode=True, selfplay=True,
                             model=model, device=device, noise=True,
                             savelist=savelist)
-    result, moves, evals = play(player, player, temp=(4, 0.5))
+    result, moves, evals = play(player, player, temp=(7, 1.0))
 
     savepath = '../selfplay/' + str(number).zfill(5)
     np.savez(savepath, result=result, moves=moves, visits=savelist, evals=evals)
 
 
-best_net = '2000_20000bs2048lr0.1d0.001e5'
+best_net = '2200_22000bs2048lr0.1d0.001e5'
 
 
 if __name__ == '__main__':

@@ -3,10 +3,10 @@ source ~/start.sh
 base0=$(ls -1 ../selfplay/*.npz | wc -l)
 echo 'Current # of games: '$base0
 
-base1=$((base0 + 250))
-base2=$((base1 + 250))
-base3=$((base2 + 250))
-base4=$((base3 + 250))
+base1=$((base0 + 500))
+base2=$((base1 + 500))
+base3=$((base2 + 500))
+base4=$((base3 + 500))
 
 python selfplay.py --range $base0 $base1 &
 PID1=$!
