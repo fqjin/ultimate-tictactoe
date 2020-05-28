@@ -51,7 +51,7 @@ def main(args):
             optimizer.step()
 
             v_counter += 1
-            if v_counter % 10 == 0:
+            if v_counter % 20 == 0:
                 m.eval()
                 running_loss = 0.0
                 with torch.no_grad():
@@ -62,7 +62,7 @@ def main(args):
                 v_loss.append(running_loss / v_len)
 
         print('Train loss {:.3f}'.format(np.mean(t_loss[-t_len:])))
-        print('Valid loss {:.3f}'.format(np.mean(v_loss[-t_len//10:])))
+        print('Valid loss {:.3f}'.format(np.mean(v_loss[-t_len//20:])))
 
         torch.save(m.state_dict(), f'../models/{logname}e{epoch+1}.pt')
 

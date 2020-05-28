@@ -2,6 +2,8 @@
 source ~/start.sh
 base0=$(ls -1 ../selfplay/*.npz | wc -l)
 echo 'Current # of games: '$base0
+echo START
+date
 
 base1=$((base0 + 500))
 base2=$((base1 + 500))
@@ -17,6 +19,8 @@ PID3=$!
 python selfplay.py --range $base3 $base4 &
 PID4=$!
 wait $PID1 $PID2 $PID3 $PID4
+echo Selfplay DONE
+date
 
 cd ../selfplay
 python scramble.py
@@ -25,5 +29,39 @@ cd ../src
 tEnd=$base4
 vEnd=$((tEnd / 10))
 python trainer.py --v_tuple 0 $vEnd --t_tuple $vEnd $tEnd
+rm -r ../selfplay/scramble
+echo Training DONE
+date
 
+python model_stats.py --flag 0 --e 8 &
+python model_stats.py --flag 1 --e 8 &
+python model_stats.py --flag 2 --e 8 &
+python model_stats.py --flag 3 --e 8 &
+wait
 
+python model_stats.py --flag 0 --e 7 &
+python model_stats.py --flag 1 --e 7 &
+python model_stats.py --flag 2 --e 7 &
+python model_stats.py --flag 3 --e 7 &
+wait
+
+python model_stats.py --flag 0 --e 6 &
+python model_stats.py --flag 1 --e 6 &
+python model_stats.py --flag 2 --e 6 &
+python model_stats.py --flag 3 --e 6 &
+wait
+
+python model_stats.py --flag 0 --e 5 &
+python model_stats.py --flag 1 --e 5 &
+python model_stats.py --flag 2 --e 5 &
+python model_stats.py --flag 3 --e 5 &
+wait
+
+python model_stats.py --flag 0 --e 4 &
+python model_stats.py --flag 1 --e 4 &
+python model_stats.py --flag 2 --e 4 &
+python model_stats.py --flag 3 --e 4 &
+wait
+
+echo Testing DONE
+date
