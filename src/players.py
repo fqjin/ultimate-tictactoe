@@ -86,6 +86,7 @@ class TreePlayer(BasePlayer):
 
         if self.v_mode:
             metric = self.t.sign * self.t.Q / self.t.N
+            # TODO: add some N to differentiate terminal nodes
         else:
             metric = self.t.N / self.t.N.max()
 

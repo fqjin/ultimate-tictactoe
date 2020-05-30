@@ -50,7 +50,9 @@ class GameViewer:
         self.frame_p.grid(row=1, column=1, rowspan=3)
         self.frame_s.grid(row=4, column=1)
 
-        self.label = tk.Label(self.frame_t, text=name, font=self.font)
+        label_font = tkFont.Font(root=self.root, family='Helvetica',
+                                 size=12, weight=tkFont.BOLD)
+        self.label = tk.Label(self.frame_t, text=name, font=label_font)
         self.label.pack()
 
         self.slider = tk.Scale(self.frame_s,

@@ -5,7 +5,7 @@ from net_player import BatchNetPlayer
 
 
 def model_vs_model(weights1, weights2, device='cpu',
-                   nodes=100, num=50, temp=(3, 0.5),
+                   nodes=100, num=50, temp=(4, 0.5),
                    save=False):
     m1 = UTTTNet()
     m2 = UTTTNet()
@@ -25,14 +25,14 @@ def model_VN(weights1, device='cpu', nodes=100):
     m.to(device).eval()
     p1 = BatchNetPlayer(nodes=nodes, v_mode=True, model=m, device=device, noise=False)
     p2 = BatchNetPlayer(nodes=nodes, v_mode=False, model=m, device=device, noise=False)
-    make_stats(p1, p2, 'Vmode', 'Nmode', weights1+'_V_vs_N', num=50, temp=(3, 0.5))
+    make_stats(p1, p2, 'Vmode', 'Nmode', weights1+'_V_vs_N', num=50, temp=(4, 0.5))
 
 
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument('--flag', type=int, required=True)
-    parser.add_argument('--e', type=int, required=True)
+    parser.add_argument('--e', type=int, default=0)
     args = parser.parse_args()
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -66,9 +66,11 @@ if __name__ == '__main__':
         '2200_22000bs2048lr0.1d0.001e5',
         '2400_24000bs2048lr0.1d0.001e6',
         '2600_26000bs2048lr0.1d0.001e8',
-        '2800_28000bs2048lr0.1d0.001e8',
+        '2800_28000bs2048lr0.1d0.001e5',
+        '3000_30000bs2048lr0.1d0.001e5',
     ]
-    nets[-1] = nets[-1][:-1] + str(args.e)
+    if args.e:
+        nets[-1] = nets[-1][:-1] + str(args.e)
     if args.flag == 0:
         model_vs_model(nets[-5], nets[-1], device=device)
     elif args.flag == 1:
