@@ -90,7 +90,7 @@ if __name__ == '__main__':
                         help='Number of nodes to search. Default 100')
     parser.add_argument('--v_mode', type=int, default=1, 
                         help='Select move with best value rather than visits. Default 1')
-    parser.add_argument('--noise', type=int, default=0, 
+    parser.add_argument('--noise', type=int, default=1, 
                         help='Add Dirichlet noise to policy. Default 0')
     args = parser.parse_args()
 
@@ -114,8 +114,8 @@ if __name__ == '__main__':
     p1 = GuiPlayer(x=600)
     p2 = BatchNetPlayer(nodes=args.nodes, v_mode=args.v_mode, model=m, noise=args.noise)
 
-    # print_result(*play(p1, p2))
-    # print_result(*play(p2, p1))
-    from stats import make_stats
-    make_stats(p1, p2, 'Felix', name, 'Felix_vs_net30000',
-               num=4, temp=(5, 1.0), save=True)
+    print_result(*play(p1, p2))
+    print_result(*play(p2, p1))
+    # from stats import make_stats
+    # make_stats(p1, p2, 'Felix', name, 'Felix_vs_net30000',
+    #            num=4, temp=(5, 1.0), save=True)

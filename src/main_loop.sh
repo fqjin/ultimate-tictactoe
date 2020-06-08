@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 source ~/start.sh
 base0=$(ls -1 ../selfplay/*.npz | wc -l)
-echo 'Current # of games: '$base0
+echo 'Current # of games:' $base0
 echo START
 date
 

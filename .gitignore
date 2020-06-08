@@ -26,4 +26,3 @@ images/*
 !images/GameViewer.png
 models/*
 logs/*
-*.zip
