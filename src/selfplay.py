@@ -17,6 +17,17 @@ def selfplay(nodes, number, model, device='cpu'):
 
 
 best_net = '3000_30000bs2048lr0.1d0.001e5'
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+
+def load_model(weights=best_net):
+    print(f'Using {device}')
+    print(f'Using network {best_net}')
+    m = UTTTNet()
+    m.load_state_dict(torch.load(f'../models/{weights}.pt',
+                                 map_location=device))
+    m = m.to(device).eval()
+    return m
 
 
 if __name__ == '__main__':
@@ -24,15 +35,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--range', type=int, nargs=2, required=True)
     args = parser.parse_args()
-    
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    print(f'Using {device}')
-    print(f'Using network {best_net}')
-    m = UTTTNet()
-    m.load_state_dict(torch.load(f'../models/{best_net}.pt',
-                                 map_location=device))
-    m = m.to(device).eval()
-    # TODO: write a load_model function in network.py
+
+    m = load_model()
     for i in range(*args.range):
         # With batching, GPU is 4x faster than CPU, ~26 sec per game
         # Currently CPU limited, so run multiple threads in parallel

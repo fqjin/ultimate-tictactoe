@@ -94,23 +94,16 @@ if __name__ == '__main__':
                         help='Add Dirichlet noise to policy. Default 0')
     args = parser.parse_args()
 
-    import torch
-    from network import UTTTNet
     from play import play
     from net_player import BatchNetPlayer
-    from selfplay import best_net
+    from selfplay import load_model
 
-    name = best_net
-    print(f'Using {name} network')
     string1 = f'Using {args.nodes} nodes in '
     string2 = 'V mode ' if args.v_mode else 'N mode '
     string3 = 'with noise' if args.noise else 'without noise'
     print(string1 + string2 + string3)
 
-    m = UTTTNet()
-    m.load_state_dict(torch.load(f'../models/{name}.pt',
-                                 map_location='cpu'))
-    m = m.eval()
+    m = load_model()
     p1 = GuiPlayer(x=600)
     p2 = BatchNetPlayer(nodes=args.nodes, v_mode=args.v_mode, model=m, noise=args.noise)
 
