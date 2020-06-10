@@ -12,10 +12,12 @@ def play(player0: BasePlayer,
          give_moves0=True,
          give_moves1=True,
          temp=None,
+         moves=None,
          ):
     if game is None:
         game = BigBoard()
-    moves = []
+    if moves is None:
+        moves = []
     evals = []
     if verbose:
         game.draw()

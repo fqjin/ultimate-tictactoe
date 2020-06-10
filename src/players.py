@@ -63,7 +63,7 @@ class TreePlayer(BasePlayer):
 
     def get_move(self, board: BigBoard, moves=None, invtemp=None):
         r = Root()
-        if moves is None:
+        if moves is None or self.t is None:
             self.t = self.treeclass(board, r, **self.treeargs)
         else:
             try:
