@@ -24,15 +24,16 @@ def win_in_puzzle(name, win_in, model, device='cpu', atol=1e-3):
     game = BigBoard()
     for m in moves:
         game.move(*m)
+    # TODO: Random D4 rotation/reflection
 
     pg = GuiPlayer(x=600)
     while True:
         if winner == 1:
-            pn = NetPlayer(nodes=1000, v_mode=False, model=model,
+            pn = NetPlayer(nodes=1000, v_mode=True, model=model,
                            device=device, noise=False)
             result, _, _ = play(pg, pn, game.copy(), moves=moves.copy())
         else:
-            pn = NetPlayer(nodes=1000, v_mode=False, model=model,
+            pn = NetPlayer(nodes=1000, v_mode=True, model=model,
                            device=device, noise=False)
             result, _, _ = play(pn, pg, game.copy(), moves=moves.copy())
         if result == data['result']:
@@ -42,14 +43,15 @@ def win_in_puzzle(name, win_in, model, device='cpu', atol=1e-3):
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument('--win_in', type=int, nargs='*', default=1,
-                        help='Win in x moves. Default 1. nargs = *')
+    parser.add_argument('--win_in', type=int, nargs='*', default=2,
+                        help='Win in x moves. Default 2. nargs = *')
     parser.add_argument('--include', type=int, default=2000,
                         help='How many of the latest games to use.')
     args = parser.parse_args()
 
     if isinstance(args.win_in, int):
         args.win_in = [args.win_in]
+    print(f'win-in: {args.win_in}')
 
     selfplay_games = sorted(glob.glob('../selfplay/*.npz'))
     selfplay_games = selfplay_games[-args.include:]
@@ -57,4 +59,5 @@ if __name__ == '__main__':
 
     model = load_model()
     for name in selfplay_games:
+        print(name)
         win_in_puzzle(name, args.win_in, model, device)
