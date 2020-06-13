@@ -19,6 +19,7 @@ class Root:
         self.N = [1]
         self.Q = [0.0]
         self.terminal = [0]
+        self.movesleft = [np.nan]
 
     def update(self):
         pass
@@ -42,9 +43,10 @@ class Tree:
         self.args = {}
 
         if self.board.result:
-            # print(f'Hit terminal node: {self.board.result}')
             self.v = value_dict[self.board.result]
             self.parent.terminal[self.index] = True
+            self.parent.movesleft[self.index] = 0
+            # TODO: combine terminal and movesleft (start movesleft at 1)
             self.parent.Q[self.index] = self.v  # N always = 1 in this case
             return
         # TODO: Add logic for forcing moves
@@ -70,6 +72,7 @@ class Tree:
         self.N = np.ones_like(self.P, dtype=np.int)
         self.Q = np.full_like(self.P, self.v)
         self.terminal = np.zeros_like(self.P, dtype=np.bool)
+        self.movesleft = np.full_like(self.P, np.nan)
 
     def get_p_and_v(self):
         if self.noise:
@@ -95,8 +98,16 @@ class Tree:
         return p
 
     def explore(self):
-        puct = (self.sign*self.Q + CPUCT*self.P*np.sqrt(self.N.sum())) / self.N
-        puct_max = int(np.argmax(puct))
+        if self.parent.terminal[self.index]:
+            q_over_n = self.Q / self.N
+            if self.sign in q_over_n * self.terminal:
+                mask = self.sign != q_over_n
+                puct_max = int(np.nanargmin(self.movesleft + 81*mask))
+            else:
+                puct_max = int(np.nanargmax(self.movesleft))
+        else:
+            puct = (self.sign*self.Q + CPUCT*self.P*np.sqrt(self.N.sum())) / self.N
+            puct_max = int(np.argmax(puct))
 
         child = self.children[puct_max]
         if not self.terminal[puct_max]:  # Not a known terminal node
@@ -114,18 +125,22 @@ class Tree:
         self.Q[puct_max] += child[2].v
 
         # Check terminal
-        if 0 not in self.terminal:
-            # print('Full terminal')
-            if self.board.mover:
-                self.v = np.min(self.Q / self.N)
-            else:
-                self.v = np.max(self.Q / self.N)
-            self.parent.terminal[self.index] = True
-            self.parent.Q[self.index] = self.v * self.parent.N[self.index]
-        elif self.sign in self.Q / self.N * self.terminal:
-            # print('Win propagation')
+        q_over_n = self.Q / self.N
+        if self.sign in q_over_n * self.terminal:
+            # Win propagation
             self.v = self.sign
             self.parent.terminal[self.index] = True
+            self.parent.movesleft[self.index] = 1 + np.nanmin(
+                self.movesleft[self.sign == q_over_n])
+            self.parent.Q[self.index] = self.v * self.parent.N[self.index]
+        elif 0 not in self.terminal:
+            # Draw/Loss propagation
+            if self.board.mover:
+                self.v = np.min(q_over_n)
+            else:
+                self.v = np.max(q_over_n)
+            self.parent.terminal[self.index] = True
+            self.parent.movesleft[self.index] = 1 + np.nanmax(self.movesleft)
             self.parent.Q[self.index] = self.v * self.parent.N[self.index]
         else:
             self.v = self.Q.sum() / self.N.sum()

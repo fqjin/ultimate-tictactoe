@@ -84,9 +84,17 @@ class TreePlayer(BasePlayer):
 
         self.explore_fn()
 
+        if self.t.parent.terminal[self.t.index]:
+            q_over_n = self.t.Q_over_N()
+            if self.t.sign in q_over_n * self.t.terminal:
+                mask = self.t.sign != q_over_n
+                index = np.nanargmin(self.t.movesleft + 81*mask)
+            else:
+                index = np.nanargmax(self.t.movesleft)
+            return self.t.children[index][:2]
+
         if self.v_mode:
             metric = self.t.sign * self.t.Q / self.t.N
-            # TODO: add some N to differentiate terminal nodes
         else:
             metric = self.t.N / self.t.N.max()
 
