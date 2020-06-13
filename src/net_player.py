@@ -42,7 +42,7 @@ class NetPlayer(TreePlayer):
             N_grid = np.zeros((9, 9))
             for c, n in zip(self.t.children, self.t.N):
                 N_grid[c[0], c[1]] = n
-                # TODO: Add terminal logic
+                # TODO: Add terminal rescaling
                 #  but not necessary if all positions get 1000 nodes (no early break)
             self.savelist.append(N_grid)
         return retvalue
@@ -115,10 +115,18 @@ class BatchNetTree(NetTree):
         if not self.evaluated:
             return self
 
-        puct = (self.sign*self.Q + CPUCT*self.P*np.sqrt(self.N.sum())) / self.N
-        puct_max = int(np.argmax(puct))
-        child = self.children[puct_max]
+        if self.parent.terminal[self.index]:
+            q_over_n = self.Q / self.N
+            if self.sign in q_over_n * self.terminal:
+                mask = self.sign != q_over_n
+                puct_max = int(np.nanargmin(self.movesleft + 81*mask))
+            else:
+                puct_max = int(np.nanargmax(self.movesleft))
+        else:
+            puct = (self.sign*self.Q + CPUCT*self.P*np.sqrt(self.N.sum())) / self.N
+            puct_max = int(np.argmax(puct))
 
+        child = self.children[puct_max]
         if self.terminal[puct_max]:  # Child is terminal
             return child[2]
         elif len(child) == 2:  # Child not initialized
@@ -157,6 +165,7 @@ class BatchNetTree(NetTree):
         self.N = np.ones_like(self.P, dtype=np.int)
         self.Q = np.full_like(self.P, self.v)
         self.terminal = np.zeros_like(self.P, dtype=np.bool)
+        self.movesleft = np.full_like(self.P, np.nan)
 
     def update(self):
         """Updates Q and v to correct values"""
@@ -166,18 +175,22 @@ class BatchNetTree(NetTree):
             self.parent.Q[self.index] += self.v
             self.parent.update()
         else:
-            if 0 not in self.terminal:
+            q_over_n = self.Q / self.N
+            if self.sign in q_over_n * self.terminal:
+                # Win
+                self.v = self.sign
+                self.parent.terminal[self.index] = True
+                self.parent.movesleft[self.index] = 1 + np.nanmin(
+                    self.movesleft[self.sign == q_over_n])
+                self.parent.Q[self.index] = self.v * self.parent.N[self.index]
+            elif 0 not in self.terminal:
                 # Full terminal
                 if self.board.mover:
                     self.v = np.min(self.Q / self.N)
                 else:
                     self.v = np.max(self.Q / self.N)
                 self.parent.terminal[self.index] = True
-                self.parent.Q[self.index] = self.v * self.parent.N[self.index]
-            elif self.sign in self.Q / self.N * self.terminal:
-                # Win
-                self.v = self.sign
-                self.parent.terminal[self.index] = True
+                self.parent.movesleft[self.index] = 1 + np.nanmax(self.movesleft)
                 self.parent.Q[self.index] = self.v * self.parent.N[self.index]
             else:
                 self.parent.Q[self.index] -= self.v
