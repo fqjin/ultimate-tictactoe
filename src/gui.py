@@ -109,6 +109,7 @@ if __name__ == '__main__':
 
     print_result(*play(p1, p2))
     print_result(*play(p2, p1))
+    # print_result(*play(p1, p1))
     # from stats import make_stats
     # make_stats(p1, p2, 'Felix', name, 'Felix_vs_net30000',
     #            num=4, temp=(5, 1.0), save=True)
