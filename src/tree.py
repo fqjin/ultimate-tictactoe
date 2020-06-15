@@ -100,10 +100,16 @@ class Tree:
     def explore(self):
         if self.parent.terminal[self.index]:
             q_over_n = self.Q / self.N
-            if self.sign in q_over_n * self.terminal:
+            if self.sign in q_over_n:
+                # Winning terminal
                 mask = self.sign != q_over_n
                 puct_max = int(np.nanargmin(self.movesleft + 81*mask))
+            elif 0 in q_over_n:
+                # Drawn terminal
+                mask = 0 == q_over_n
+                puct_max = int(np.nanargmax(self.movesleft + 81*mask))
             else:
+                # Losing terminal
                 puct_max = int(np.nanargmax(self.movesleft))
         else:
             puct = (self.sign*self.Q + CPUCT*self.P*np.sqrt(self.N.sum())) / self.N

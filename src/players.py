@@ -86,10 +86,16 @@ class TreePlayer(BasePlayer):
 
         if self.t.parent.terminal[self.t.index]:
             q_over_n = self.t.Q_over_N()
-            if self.t.sign in q_over_n * self.t.terminal:
+            if self.t.sign in q_over_n:
+                # Winning terminal
                 mask = self.t.sign != q_over_n
                 index = np.nanargmin(self.t.movesleft + 81*mask)
+            elif 0 in q_over_n:
+                # Drawn terminal
+                mask = 0 == q_over_n
+                index = np.nanargmax(self.t.movesleft + 81*mask)
             else:
+                # Losing terminal
                 index = np.nanargmax(self.t.movesleft)
             return self.t.children[index][:2]
 
