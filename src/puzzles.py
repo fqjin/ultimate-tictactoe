@@ -45,7 +45,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--win_in', type=int, nargs='*', default=2,
                         help='Win in x moves. Default 2. nargs = *')
-    parser.add_argument('--include', type=int, default=2500,
+    parser.add_argument('--include', type=int, default=2000,
                         help='How many of the latest games to use.')
     args = parser.parse_args()
 

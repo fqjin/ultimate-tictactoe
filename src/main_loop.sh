@@ -5,10 +5,10 @@ echo 'Current # of games:' $base0
 echo START
 date
 
-base1=$((base0 + 625))
-base2=$((base1 + 625))
-base3=$((base2 + 625))
-base4=$((base3 + 625))
+base1=$((base0 + 500))
+base2=$((base1 + 500))
+base3=$((base2 + 500))
+base4=$((base3 + 500))
 
 python selfplay.py --range $base0 $base1 &
 PID1=$!
@@ -28,7 +28,7 @@ cd ../src
 
 tEnd=$base4
 vEnd=$((tEnd / 10))
-python trainer.py --v_tuple 0 $vEnd --t_tuple $vEnd $tEnd --epochs 15
+python trainer.py --v_tuple 0 $vEnd --t_tuple $vEnd $tEnd --epochs 12
 rm -r ../selfplay/scramble
 echo Training DONE
 date
@@ -55,12 +55,6 @@ python model_stats.py --flag 0 --e 5 &
 python model_stats.py --flag 1 --e 5 &
 python model_stats.py --flag 2 --e 5 &
 python model_stats.py --flag 3 --e 5 &
-wait
-
-python model_stats.py --flag 0 --e 9 &
-python model_stats.py --flag 1 --e 9 &
-python model_stats.py --flag 2 --e 9 &
-python model_stats.py --flag 3 --e 9 &
 wait
 
 echo Testing DONE

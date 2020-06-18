@@ -107,6 +107,7 @@ class Tree:
             elif 0 in q_over_n:
                 # Drawn terminal
                 mask = 0 == q_over_n
+                # TODO: minimize moves left instead of maximize!
                 puct_max = int(np.nanargmax(self.movesleft + 81*mask))
             else:
                 # Losing terminal

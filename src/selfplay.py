@@ -16,7 +16,7 @@ def selfplay(nodes, number, model, device='cpu'):
     np.savez(savepath, result=result, moves=moves, visits=savelist, evals=evals)
 
 
-best_net = '3250_32500bs2048lr0.1d0.001e8'
+best_net = '3200_32000bs2048lr0.1d0.001e6'
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
