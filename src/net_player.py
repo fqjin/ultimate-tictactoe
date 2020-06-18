@@ -123,8 +123,8 @@ class BatchNetTree(NetTree):
                 puct_max = int(np.nanargmin(self.movesleft + 81*mask))
             elif 0 in q_over_n:
                 # Drawn terminal
-                mask = 0 == q_over_n
-                puct_max = int(np.nanargmax(self.movesleft + 81*mask))
+                mask = q_over_n != 0
+                puct_max = int(np.nanargmin(self.movesleft + 81*mask))
             else:
                 # Losing terminal
                 puct_max = int(np.nanargmax(self.movesleft))

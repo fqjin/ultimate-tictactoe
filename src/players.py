@@ -92,8 +92,8 @@ class TreePlayer(BasePlayer):
                 index = np.nanargmin(self.t.movesleft + 81*mask)
             elif 0 in q_over_n:
                 # Drawn terminal
-                mask = 0 == q_over_n
-                index = np.nanargmax(self.t.movesleft + 81*mask)
+                mask = q_over_n != 0
+                index = np.nanargmin(self.t.movesleft + 81*mask)
             else:
                 # Losing terminal
                 index = np.nanargmax(self.t.movesleft)
