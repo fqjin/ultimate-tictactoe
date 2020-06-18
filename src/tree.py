@@ -40,13 +40,12 @@ class Tree:
         self.parent = parent
         self.index = parent_index
         self.noise = noise
-        self.args = {}
+        self.args = {'noise': noise}
 
         if self.board.result:
             self.v = value_dict[self.board.result]
             self.parent.terminal[self.index] = True
             self.parent.movesleft[self.index] = 0
-            # TODO: combine terminal and movesleft (start movesleft at 1)
             self.parent.Q[self.index] = self.v  # N always = 1 in this case
             return
         # TODO: Add logic for forcing moves
