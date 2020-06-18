@@ -84,7 +84,7 @@ class TreePlayer(BasePlayer):
 
         self.explore_fn()
 
-        if self.t.parent.terminal[self.t.index]:
+        if not np.isnan(self.t.parent.movesleft[self.t.index]):
             q_over_n = self.t.Q_over_N()
             if self.t.sign in q_over_n:
                 # Winning terminal

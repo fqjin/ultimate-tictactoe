@@ -87,7 +87,7 @@ class BatchNetTree(NetTree):
             else:
                 node.increment()
                 batch.append(node)
-                if node.parent.terminal[node.index]:
+                if not np.isnan(node.parent.movesleft[node.index]):
                     term_batch.append(node)
                 else:
                     nonterm_batch.append(node)
@@ -115,7 +115,7 @@ class BatchNetTree(NetTree):
         if not self.evaluated:
             return self
 
-        if self.parent.terminal[self.index]:
+        if not np.isnan(self.parent.movesleft[self.index]):
             q_over_n = self.Q / self.N
             if self.sign in q_over_n:
                 # Winning terminal
@@ -133,7 +133,7 @@ class BatchNetTree(NetTree):
             puct_max = int(np.argmax(puct))
 
         child = self.children[puct_max]
-        if self.terminal[puct_max]:  # Child is terminal
+        if not np.isnan(self.movesleft[puct_max]):  # Child is terminal
             return child[2]
         elif len(child) == 2:  # Child not initialized
             board = self.board.copy()
@@ -170,7 +170,6 @@ class BatchNetTree(NetTree):
         self.P = np.asarray(self.P)
         self.N = np.ones_like(self.P, dtype=np.int)
         self.Q = np.full_like(self.P, self.v)
-        self.terminal = np.zeros_like(self.P, dtype=np.bool)
         self.movesleft = np.full_like(self.P, np.nan)
 
     def update(self):
@@ -182,20 +181,19 @@ class BatchNetTree(NetTree):
             self.parent.update()
         else:
             q_over_n = self.Q / self.N
-            if self.sign in q_over_n * self.terminal:
+            terminal = ~np.isnan(self.movesleft)
+            if self.sign in q_over_n * terminal:
                 # Win
                 self.v = self.sign
-                self.parent.terminal[self.index] = True
                 self.parent.movesleft[self.index] = 1 + np.nanmin(
                     self.movesleft[self.sign == q_over_n])
                 self.parent.Q[self.index] = self.v * self.parent.N[self.index]
-            elif 0 not in self.terminal:
+            elif np.all(terminal):
                 # Full terminal
                 if self.board.mover:
                     self.v = np.min(self.Q / self.N)
                 else:
                     self.v = np.max(self.Q / self.N)
-                self.parent.terminal[self.index] = True
                 self.parent.movesleft[self.index] = 1 + np.nanmax(self.movesleft)
                 self.parent.Q[self.index] = self.v * self.parent.N[self.index]
             else:
