@@ -5,10 +5,10 @@ echo 'Current # of games:' $base0
 echo START
 date
 
-base1=$((base0 + 500))
-base2=$((base1 + 500))
-base3=$((base2 + 500))
-base4=$((base3 + 500))
+base1=$((base0 + 1000))
+base2=$((base1 + 1000))
+base3=$((base2 + 1000))
+base4=$((base3 + 1000))
 
 python selfplay.py --range $base0 $base1 &
 PID1=$!
