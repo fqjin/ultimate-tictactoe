@@ -76,6 +76,7 @@ class TreePlayer(BasePlayer):
                             self.t = c[2]
                             self.t.index = 0
                             self.t.parent = r
+                            # TODO: check if should decrement r.movesleft by 1
                             break
                     else:
                         raise RuntimeError('Given move not found in children')

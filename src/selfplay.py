@@ -16,13 +16,13 @@ def selfplay(nodes, number, model, device='cpu'):
     np.savez(savepath, result=result, moves=moves, visits=savelist, evals=evals)
 
 
-best_net = '3600_36000bs2048lr0.1d0.001e7'
+best_net = '4000_40000bs2048lr0.1d0.001e11'
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
 def load_model(weights=best_net):
     print(f'Using {device}')
-    print(f'Using network {best_net}')
+    print(f'Using network {weights}')
     m = UTTTNet()
     m.load_state_dict(torch.load(f'../models/{weights}.pt',
                                  map_location=device))

@@ -96,14 +96,14 @@ if __name__ == '__main__':
 
     from play import play
     from net_player import BatchNetPlayer
-    from selfplay import load_model
+    from selfplay import load_model, best_net
 
     string1 = f'Using {args.nodes} nodes in '
     string2 = 'V mode ' if args.v_mode else 'N mode '
     string3 = 'with noise' if args.noise else 'without noise'
     print(string1 + string2 + string3)
 
-    m = load_model()
+    m = load_model(best_net)
     p1 = GuiPlayer(x=600)
     p2 = BatchNetPlayer(nodes=args.nodes, v_mode=args.v_mode, model=m, noise=args.noise)
 
@@ -111,5 +111,5 @@ if __name__ == '__main__':
     print_result(*play(p2, p1))
     # print_result(*play(p1, p1))
     # from stats import make_stats
-    # make_stats(p1, p2, 'Felix', name, 'Felix_vs_net30000',
+    # make_stats(p1, p2, 'Felix', best_net, 'Felix_vs_net40000',
     #            num=4, temp=(5, 1.0), save=True)

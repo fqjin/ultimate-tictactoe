@@ -14,7 +14,7 @@
 
 ## Selfplay strength estimate
 <p>
-<img src="./images/Ordo.png" width="390" height="260">
+<img src="./images/Ordo.png" width="450" height="300">
 </p>
 
 ## Game Viewer

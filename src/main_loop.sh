@@ -33,6 +33,18 @@ rm -r ../selfplay/scramble
 echo Training DONE
 date
 
+python model_stats.py --flag 0 --e 10 &
+python model_stats.py --flag 1 --e 10 &
+python model_stats.py --flag 2 --e 10 &
+python model_stats.py --flag 3 --e 10 &
+wait
+
+python model_stats.py --flag 0 --e 9 &
+python model_stats.py --flag 1 --e 9 &
+python model_stats.py --flag 2 --e 9 &
+python model_stats.py --flag 3 --e 9 &
+wait
+
 python model_stats.py --flag 0 --e 8 &
 python model_stats.py --flag 1 --e 8 &
 python model_stats.py --flag 2 --e 8 &

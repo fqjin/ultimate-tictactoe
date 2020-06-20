@@ -70,6 +70,7 @@ if __name__ == '__main__':
         '3000_30000bs2048lr0.1d0.001e5',
         '3200_32000bs2048lr0.1d0.001e6',
         '3600_36000bs2048lr0.1d0.001e7',
+        '4000_40000bs2048lr0.1d0.001e11',
     ]
     if args.e:
         nets[-1] = nets[-1][:-1] + str(args.e)
@@ -84,7 +85,7 @@ if __name__ == '__main__':
     elif args.flag == 4:
         model_VN(nets[-1], device=device)
     elif args.flag == 5:
-        model_vs_model(nets[-1], nets[-5], device=device,
+        model_vs_model(nets[-1], nets[14], device=device,
                        num=1, nodes=10000, temp=None, save=True)
     else:
         raise ValueError(f'args.flag is {args.flag}')
