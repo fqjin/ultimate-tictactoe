@@ -17,6 +17,12 @@ def board_to_planes(bigboard: BigBoard):
 
     Return shape: (1, 8, 9, 9)
     """
+    # TODO: a plane with sectors that have an empty tile for each sectors
+    #  shrunk and overlaid on each sector would probably benefit the network.
+    #  It might also really help human players as well.
+    # TODO: maybe instead of one big empty tiled channel, to give all three: X,O,T tiled
+    # TODO: the other thing that may help is a big to small project in the network.
+    #  Analogous to squeeze-excite
     boards = torch.tensor(bigboard.boards).view(3, 3, 3, 3)
     boards = torch.cat(boards.chunk(3, dim=0), dim=2)
     boards = torch.cat(boards.chunk(3, dim=1), dim=3)
