@@ -7,6 +7,7 @@ from engine import BigBoard
 ALPHA = np.full(81, 1.0)  # alpha = 10 / ave # legal moves
 CPUCT = 2.0
 value_dict = {
+    0: 0.0,
     1: 1.0,
     2: -1.0,
     3: 0.0,
