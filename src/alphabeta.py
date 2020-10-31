@@ -102,6 +102,9 @@ class ABPlayer(BasePlayer):
                 # Only want last move if selfplay
                 moves = [moves[-1]]
             for m in moves:
+                if not self.t.children:
+                    self.t = self.treeclass(board, -1, 1)
+                    break
                 for c in self.t.children:
                     if c[0] == m[0] and c[1] == m[1]:
                         self.t = c[2]
