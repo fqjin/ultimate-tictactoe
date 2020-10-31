@@ -12,6 +12,9 @@ class BasePlayer:
     def resulted(self, board: BigBoard, moves):
         pass
 
+    def reset(self):
+        pass
+
 
 class RandomPlayer(BasePlayer):
     def get_move(self, board: BigBoard, moves=None, invtemp=None):
@@ -51,6 +54,9 @@ class TreePlayer(BasePlayer):
         self.treeclass = Tree
         self.treeargs = {}
         self.selfplay = selfplay
+
+    def reset(self):
+        self.t = None
 
     def explore_fn(self):
         # Search nodes proportional to number of legal moves

@@ -94,6 +94,9 @@ class ABPlayer(BasePlayer):
         self.selfplay = selfplay
         self.t = None
 
+    def reset(self):
+        self.t = None
+
     def get_move(self, board, moves=None, invtemp=None):
         if moves is None or self.t is None:
             self.t = self.treeclass(board, -1, 1)

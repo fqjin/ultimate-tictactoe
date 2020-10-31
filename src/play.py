@@ -22,6 +22,8 @@ def play(player0: BasePlayer,
     if verbose:
         game.draw()
 
+    player0.reset()
+    player1.reset()
     while True:
         if press_enter:
             input()
