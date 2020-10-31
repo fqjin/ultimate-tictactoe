@@ -117,3 +117,55 @@ class GameDataset(Dataset):
             return planes, (policy, self.result[idx])
         else:
             return self.planes[idx], (self.policy[idx], self.result[idx])
+
+
+class ABGameDataset(Dataset):
+    """Loads selfplay AB games"""
+    def __init__(self, start, end, device='cpu', augment=False):
+        path = '../selfplayAB/data.zip'
+        self.augment = augment
+        self.planes = []
+        self.result = []
+
+        xxx = np.load(path)
+        for i in tqdm(range(start, end)):
+            try:
+                moves = xxx[str(i).zfill(5)]
+            except KeyError:
+                raise KeyError('Selfplay game number not in selfplay zip')
+
+            planes = []
+            b = BigBoard()
+            planes.append(board_to_planes(b))
+            for m in moves[:-2]:
+                b.move(*m)
+                planes.append(board_to_planes(b))
+            result = [value_dict[moves[-1, 0].item()]] * len(planes)
+
+            self.planes.extend(planes)
+            self.result.extend(result)
+
+        self.planes = torch.cat(self.planes, dim=0).to(device)
+        self.result = torch.tensor(self.result,
+                                   dtype=torch.float32,
+                                   device=device).view(-1, 1)
+
+    def __len__(self):
+        return len(self.result)
+
+    def __getitem__(self, idx):
+        if self.augment:
+            # getrandbits 10x faster than randint
+            aug = getrandbits(3)
+            planes = self.planes[idx]
+            if aug & 3 == 1:
+                planes = torch.flip(planes, dims=(1,))
+            elif aug & 3 == 2:
+                planes = torch.flip(planes, dims=(2,))
+            elif aug & 3 == 3:
+                planes = torch.flip(planes, dims=(1, 2))
+            if aug & 4:
+                planes = torch.transpose(planes, 1, 2)
+            return planes, self.result[idx]
+        else:
+            return self.planes[idx], self.result[idx]
