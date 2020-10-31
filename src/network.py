@@ -182,9 +182,50 @@ class UTTTNetS(nn.Module):
         return p, v
 
 
+class ABNet(nn.Module):
+    def __init__(self, blocks=1, filters=32):
+        super().__init__()
+        self.blocks = blocks
+        self.filters = filters
+
+        # 8 full 9x9 input planes:
+        # - mover, X, O, legal moves, big empty tiled, big X, big O, big T
+
+        self.in_conv = nn.Conv2d(8, filters - 8, 3, padding=1, bias=False)
+
+        if blocks == 1:
+            self.trunk = SimpleBlock(filters)
+        else:
+            trunk = [SimpleBlock(filters) for _ in range(blocks)]
+            self.trunk = nn.Sequential(*trunk)
+
+        self.value1 = nn.Sequential(
+            nn.BatchNorm2d(filters),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(filters, 2*filters, 3, stride=3, padding=0, bias=False),
+            nn.BatchNorm2d(2*filters),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(2*filters, 4*filters, 3, padding=0, bias=True),
+            nn.ReLU(inplace=True),
+        )  # squeeze
+        self.value2 = nn.Sequential(
+            nn.Linear(4*filters, 1, bias=True),
+            nn.Tanh(),
+        )
+
+    def forward(self, x):
+        x = torch.cat([x, self.in_conv(x)], dim=1)
+        x = self.trunk(x)
+        v = self.value2(self.value1(x)[:, :, 0, 0])
+        return v
+
+
 if __name__ == '__main__':
+    # In general, increasing depth reduces speed
+    # but increasing width does not
     for m in [UTTTNet(blocks=5, filters=64),   # 452353
               UTTTNetS(blocks=5, filters=16),  # _49905
+              ABNet(blocks=1, filters=32),     # 112897
               ]:
         params = sum(p.numel() for p in m.parameters())
         print(params)
