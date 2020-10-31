@@ -15,7 +15,7 @@ class ABTree:
         self.beta = beta
         self.noise = noise
         self.sign = value_dict[self.board.mover + 1]
-        self.value = self.eval_fn()
+        self.value = None
         self.children = []
 
     def eval_fn(self):
@@ -32,6 +32,7 @@ class ABTree:
             board = self.board.copy()
             board.move(sector, tile)
             child = self.__class__(board, self.alpha, self.beta, self.noise)
+            child.value = child.eval_fn()
             self.children.append([sector, tile, child])
 
     def reorder_children(self):
