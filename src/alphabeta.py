@@ -18,8 +18,6 @@ class ABTree:
         self.children = []
 
     def eval_fn(self):
-        if self.board.result:
-            print(f'    AB Result {self.board.result}')
         return value_dict[self.board.result]
 
     def update(self, alpha, beta):
@@ -84,7 +82,6 @@ class ABTree:
 class RandABTree(ABTree):
     def eval_fn(self):
         if self.board.result:
-            print(f'RandAB Result {self.board.result}')
             return value_dict[self.board.result]
         else:
             return 2*np.random.rand() - 1
@@ -115,5 +112,4 @@ class ABPlayer(BasePlayer):
         for d in range(self.max_depth):
             self.t.explore(d)
 
-        print(self.t.best_child()[2].value)
         return self.t.best_child()[:2]
