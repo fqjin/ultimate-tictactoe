@@ -25,13 +25,6 @@ class ABTree:
         self.alpha = alpha
         self.beta = beta
 
-    def reset_AB(self):
-        self.alpha = -1
-        self.beta = 1
-        if self.children:
-            for child in self.children:
-                child[2].reset_AB()
-
     def init_children(self):
         # Only init children when evaluated
         for sector, tile in np.ndindex(9, 9):
@@ -123,7 +116,8 @@ class ABPlayer(BasePlayer):
                 else:
                     raise RuntimeError('Given move not found in children')
                 # Reset alpha beta
-                self.t.reset_AB()
+                self.t.alpha = -1
+                self.t.beta = 1
 
         for d in range(self.max_depth+1):
             self.t.explore(d)
