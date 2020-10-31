@@ -27,12 +27,12 @@ class ABTree:
 
     def init_children(self):
         # Only init children when evaluated
-        for sector, tile in np.ndindex(9, 9):
-            if self.board.legal_moves[sector][tile]:  # TODO use np.where
-                board = self.board.copy()
-                board.move(sector, tile)
-                child = self.__class__(board, self.alpha, self.beta, self.noise)
-                self.children.append([sector, tile, child])
+        legal_moves = np.array(self.board.legal_moves)
+        for sector, tile in zip(*legal_moves.nonzero()):
+            board = self.board.copy()
+            board.move(sector, tile)
+            child = self.__class__(board, self.alpha, self.beta, self.noise)
+            self.children.append([sector, tile, child])
 
     def reorder_children(self):
         self.children.sort(key=lambda c: c[2].value, reverse=self.sign > 0)
