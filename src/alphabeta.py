@@ -2,6 +2,7 @@ import numpy as np
 from tree import value_dict
 from players import BasePlayer
 
+
 class ABTree:
     """Alpha-beta minimax search tree"""
     def __init__(self,
@@ -23,6 +24,13 @@ class ABTree:
     def update(self, alpha, beta):
         self.alpha = alpha
         self.beta = beta
+
+    def reset_AB(self):
+        self.alpha = -1
+        self.beta = 1
+        if self.children:
+            for child in self.children:
+                child[2].reset_AB()
 
     def init_children(self):
         # Only init children when evaluated
@@ -114,6 +122,8 @@ class ABPlayer(BasePlayer):
                         break
                 else:
                     raise RuntimeError('Given move not found in children')
+                # Reset alpha beta
+                self.t.reset_AB()
 
         for d in range(self.max_depth):
             self.t.explore(d)
