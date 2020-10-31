@@ -125,7 +125,7 @@ class ABPlayer(BasePlayer):
                 # Reset alpha beta
                 self.t.reset_AB()
 
-        for d in range(self.max_depth):
+        for d in range(self.max_depth+1):
             self.t.explore(d)
 
         return self.t.best_child()[:2]
