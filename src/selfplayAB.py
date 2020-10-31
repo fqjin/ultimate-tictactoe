@@ -16,14 +16,12 @@ def selfplayAB(number, player):
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument('--selfplay', action='store_true')
-    parser.add_argument('--range', type=int, nargs=2)
+    parser.add_argument('--range', type=int, nargs=2, required=True)
     args = parser.parse_args()
 
-    if args.selfplay:
-        p = ABPlayer(RandABTree, max_depth=3, selfplay=True)
-        for i in range(*args.range):
-            print(i)
-            # With batching, GPU is 4x faster than CPU, ~26 sec per game
-            # Currently CPU limited, so run multiple threads in parallel
-            selfplayAB(i, p)
+    p = ABPlayer(RandABTree, max_depth=3, selfplay=True)
+    for i in range(*args.range):
+        print(i)
+        # With batching, GPU is 4x faster than CPU, ~26 sec per game
+        # Currently CPU limited, so run multiple threads in parallel
+        selfplayAB(i, p)
