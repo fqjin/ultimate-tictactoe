@@ -9,16 +9,14 @@ class ABTree:
                  board,
                  alpha,
                  beta,
-                 noise=True,
                  **kwargs):
         self.board = board
         self.alpha = alpha
         self.beta = beta
-        self.noise = noise
+        self.kwargs = kwargs
         self.sign = value_dict[self.board.mover + 1]
         self.v = None
         self.children = []
-        self.kwargs = {}
 
     def eval_fn(self):
         return value_dict[self.board.result]
@@ -33,8 +31,7 @@ class ABTree:
         for sector, tile in zip(*legal_moves.nonzero()):
             board = self.board.copy()
             board.move(sector, tile)
-            child = self.__class__(board, self.alpha, self.beta, self.noise,
-                                   **self.kwargs)
+            child = self.__class__(board, self.alpha, self.beta, **self.kwargs)
             child.v = child.eval_fn()
             self.children.append([sector, tile, child])
 
@@ -127,5 +124,12 @@ class ABPlayer(BasePlayer):
 
         for d in range(self.max_depth+1):
             self.t.explore(d)
+
+        if invtemp:
+            noise = np.random.rand(len(self.t.children))
+            noise -= 0.5
+            noise /= (10 * invtemp)
+            for n, c in zip(noise, self.t.children):
+                c[2].v += n
 
         return self.t.best_child()[:2]

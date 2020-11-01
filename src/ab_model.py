@@ -18,14 +18,13 @@ def load_ABnet(weights, device=None, **kwargs):
 
 
 class NetABTree(ABTree):
-    def __init__(self, board, alpha, beta, noise=True,
+    def __init__(self, board, alpha, beta,
                  model=None, device=None):
-        super().__init__(board, alpha, beta, noise)
         if model is None or device is None:
             raise TypeError('model or device argument is missing')
+        super().__init__(board, alpha, beta, model=model, device=device)
         self.model = model
         self.device = device
-        self.kwargs = {'model': model, 'device': device}
 
     def eval_fn(self):
         return None
@@ -43,7 +42,5 @@ class NetABTree(ABTree):
             x = torch.cat([board_to_planes(c.board) for c in non_terminal])
             with torch.no_grad():
                 values = self.model(x.to(self.device))
-            if self.noise:
-                values += 0.1 * (torch.rand_like(values) - 0.5)
             for value, child in zip(values, non_terminal):
                 child.v = value.item()
