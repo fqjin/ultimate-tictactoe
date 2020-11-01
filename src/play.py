@@ -14,12 +14,14 @@ def play(player0: BasePlayer,
          give_moves1=True,
          temp=None,
          moves=None,
+         timing=False,
          ):
     if game is None:
         game = BigBoard()
     if moves is None:
         moves = []
     evals = []
+    times = []
     if verbose:
         game.draw()
 
@@ -33,8 +35,9 @@ def play(player0: BasePlayer,
             args = {'invtemp': temp[1]}
         else:
             args = {}
-        # time1 = time()
         # TODO: Rewrite keep_tree logic better
+        if timing:
+            time1 = time()
         if game.mover:
             if give_moves1 and len(moves) > 3:
                 sector, tile = player1.get_move(game, moves=moves[-2:], **args)
@@ -45,7 +48,8 @@ def play(player0: BasePlayer,
                 sector, tile = player0.get_move(game, moves=moves[-2:], **args)
             else:
                 sector, tile = player0.get_move(game, **args)
-        # print(f'Time elapsed: {time()-time1:.2f}')
+        if timing:
+            times.append(time()-time1)
         game.move(sector, tile)
         moves.append((sector, tile))
         if game.mover and isinstance(player0, (NetPlayer, ABPlayer)):
@@ -74,4 +78,7 @@ def play(player0: BasePlayer,
         else:
             print(f'{decode_dict[game.result]} Wins')
 
-    return game.result, moves, evals
+    if timing:
+        return game.result, moves, evals, times
+    else:
+        return game.result, moves, evals
