@@ -36,7 +36,7 @@ class NetABTree(ABTree):
         for c in self.children:
             child = c[2]
             if child.board.result:
-                child.value = value_dict[child.board.result]
+                child.v = value_dict[child.board.result]
             else:
                 non_terminal.append(child)
         x = torch.cat([board_to_planes(child.board) for child in non_terminal])
@@ -44,5 +44,5 @@ class NetABTree(ABTree):
             values = self.model(x.to(self.device))
         if self.noise:
             values += 0.1 * (torch.rand_like(values) - 0.5)
-        for v, child in zip(values, non_terminal):
-            child.value = v.item()
+        for value, child in zip(values, non_terminal):
+            child.v = value.item()

@@ -16,7 +16,7 @@ class ABTree:
         self.beta = beta
         self.noise = noise
         self.sign = value_dict[self.board.mover + 1]
-        self.value = None
+        self.v = None
         self.children = []
         self.kwargs = {}
 
@@ -35,11 +35,11 @@ class ABTree:
             board.move(sector, tile)
             child = self.__class__(board, self.alpha, self.beta, self.noise,
                                    **self.kwargs)
-            child.value = child.eval_fn()
+            child.v = child.eval_fn()
             self.children.append([sector, tile, child])
 
     def reorder_children(self):
-        self.children.sort(key=lambda c: c[2].value, reverse=self.sign > 0)
+        self.children.sort(key=lambda c: c[2].v, reverse=self.sign > 0)
 
     def explore(self, depth=1):
         if not depth or self.board.result:
@@ -51,7 +51,7 @@ class ABTree:
         for child in self.children:
             child[2].update(self.alpha, self.beta)
             child[2].explore(depth=depth-1)
-            value = self.sign*max(self.sign*value, self.sign*child[2].value)
+            value = self.sign*max(self.sign * value, self.sign * child[2].v)
             if self.sign > 0:
                 self.alpha = max(self.alpha, value)
                 if self.alpha >= self.beta:
@@ -60,10 +60,10 @@ class ABTree:
                 self.beta = min(self.beta, value)
                 if self.beta <= self.alpha:
                     break
-        self.value = value
+        self.v = value
 
     def child_values(self):
-        return [c[2].value for c in self.children]
+        return [c[2].v for c in self.children]
 
     def best_child(self):
         if not self.children:
