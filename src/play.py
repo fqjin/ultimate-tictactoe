@@ -1,6 +1,7 @@
 from engine import BigBoard, decode_dict
 from players import BasePlayer
 from net_player import NetPlayer
+from alphabeta import ABPlayer
 from time import time
 
 
@@ -47,9 +48,9 @@ def play(player0: BasePlayer,
         # print(f'Time elapsed: {time()-time1:.2f}')
         game.move(sector, tile)
         moves.append((sector, tile))
-        if isinstance(player0, NetPlayer) and game.mover:
+        if game.mover and isinstance(player0, (NetPlayer, ABPlayer)):
             evals.append(player0.t.v)
-        elif isinstance(player1, NetPlayer) and not game.mover:
+        elif not game.mover and isinstance(player1, (NetPlayer, ABPlayer)):
             evals.append(player1.t.v)
         else:
             evals.append(0.0)
