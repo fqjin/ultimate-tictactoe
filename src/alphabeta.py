@@ -9,7 +9,8 @@ class ABTree:
                  board,
                  alpha,
                  beta,
-                 noise=True):
+                 noise=True,
+                 **kwargs):
         self.board = board
         self.alpha = alpha
         self.beta = beta
@@ -17,6 +18,7 @@ class ABTree:
         self.sign = value_dict[self.board.mover + 1]
         self.value = None
         self.children = []
+        self.kwargs = {}
 
     def eval_fn(self):
         return value_dict[self.board.result]
@@ -31,7 +33,8 @@ class ABTree:
         for sector, tile in zip(*legal_moves.nonzero()):
             board = self.board.copy()
             board.move(sector, tile)
-            child = self.__class__(board, self.alpha, self.beta, self.noise)
+            child = self.__class__(board, self.alpha, self.beta, self.noise,
+                                   **self.kwargs)
             child.value = child.eval_fn()
             self.children.append([sector, tile, child])
 
@@ -90,10 +93,12 @@ class RandABTree(ABTree):
 
 
 class ABPlayer(BasePlayer):
-    def __init__(self, treeclass=ABTree, max_depth=81, selfplay=False):
+    def __init__(self, treeclass=ABTree, max_depth=81, selfplay=False,
+                 **kwargs):
         self.treeclass = treeclass
         self.max_depth = max_depth
         self.selfplay = selfplay
+        self.kwargs = kwargs
         self.t = None
 
     def reset(self):
@@ -101,14 +106,14 @@ class ABPlayer(BasePlayer):
 
     def get_move(self, board, moves=None, invtemp=None):
         if moves is None or self.t is None:
-            self.t = self.treeclass(board, -1, 1)
+            self.t = self.treeclass(board, -1, 1, **self.kwargs)
         else:
             if self.selfplay:
                 # Only want last move if selfplay
                 moves = [moves[-1]]
             for m in moves:
                 if not self.t.children:
-                    self.t = self.treeclass(board, -1, 1)
+                    self.t = self.treeclass(board, -1, 1, **self.kwargs)
                     break
                 for c in self.t.children:
                     if c[0] == m[0] and c[1] == m[1]:
