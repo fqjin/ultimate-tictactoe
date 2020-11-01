@@ -12,8 +12,13 @@ class GameViewer:
     # TODO: Load game dialog
     # TODO: Playout lines
     def __init__(self, moves, evals=None, name='', plot_style='-', x=0, y=0):
-        self.moves = moves.tolist()
-        if evals is not None:
+        if isinstance(moves, list):
+            self.moves = moves
+        else:
+            self.moves = moves.tolist()
+        if isinstance(evals, list):
+            self.evals = evals
+        elif evals is not None:
             self.evals = evals.tolist()
         else:
             self.evals = [0.0] * len(moves)
