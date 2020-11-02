@@ -9,7 +9,7 @@ from network import ABNet
 
 
 def main(args):
-    logname = f'{args.t_tuple[0]}_{args.t_tuple[1]}' \
+    logname = f'drop{args.t_tuple[0]}_{args.t_tuple[1]}' \
               f'bs{args.batch_size}lr{args.lr}d{args.decay}ab'
     print(logname)
 
@@ -32,7 +32,7 @@ def main(args):
                                 momentum=args.momentum,
                                 nesterov=True,
                                 weight_decay=args.decay)
-
+    sched = torch.optim.lr_scheduler.StepLR(optimizer, 7, gamma=0.1)
     t_loss = []
     v_loss = []
     t_len = len(t_dataloader)
@@ -63,7 +63,7 @@ def main(args):
 
         print('Train loss {:.3f}'.format(np.mean(t_loss[-t_len:])))
         print('Valid loss {:.3f}'.format(np.mean(v_loss[-t_len//20:])))
-
+        sched.step()
         torch.save(m.state_dict(), f'../models/{logname}e{epoch+1}.pt')
 
     np.savez(f'../logs/{logname}e{args.epochs}',
@@ -78,7 +78,7 @@ if __name__ == '__main__':
                    help='tuple for validation data range')
     p.add_argument('--t_tuple', type=int, nargs=2, default=(100, 1000),
                    help='tuple for training data range')
-    p.add_argument('--epochs', type=int, default=10)
+    p.add_argument('--epochs', type=int, default=8)
     p.add_argument('--batch_size', type=int, default=2048)
     p.add_argument('--lr', type=float, default=0.1)
     p.add_argument('--momentum', type=float, default=0.9)
