@@ -5,7 +5,7 @@ from ab_model import NetABTree, load_ABnet
 from play import play
 
 
-best_net = '1000_10000bs2048lr0.1d0.001abe5'
+best_net = 'drop0_19000bs2048lr0.1d0.001abe8'
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 

@@ -26,12 +26,15 @@ if __name__ == '__main__':
     nets = [
         'init_ab',
         '1000_10000bs2048lr0.1d0.001abe5',
-        '1000_10000bs2048lr0.1d0.001abe10',
+        'drop0_19000bs2048lr0.1d0.001abe8',
     ]
     if args.e:
         nets[-1] = nets[-1][:-1] + str(args.e)
     if args.flag == 0:
-        model_vs_model(nets[-2], nets[-1], device=device)
+        model_vs_model(nets[-1], nets[-2], device=device)
     elif args.flag == 1:
-        model_vs_model(nets[-2], nets[0], device=device)
+        model_vs_model(nets[-1], nets[-3], device=device)
+    elif args.flag == 2:
+        model_vs_model(nets[-1], nets[-4], device=device)
+
 
