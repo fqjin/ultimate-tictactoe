@@ -118,11 +118,11 @@ class ABPlayer(BasePlayer):
                         break
                 else:
                     raise RuntimeError('Given move not found in children')
-                # Reset alpha beta
-                self.t.alpha = -1
-                self.t.beta = 1
 
-        for d in range(self.max_depth+1):
+        for d in range(1, self.max_depth+1):
+            # Reset alpha beta
+            self.t.alpha = -1
+            self.t.beta = 1
             self.t.explore(d)
 
         if invtemp:
