@@ -78,7 +78,7 @@ if __name__ == '__main__':
                    help='tuple for validation data range')
     p.add_argument('--t_tuple', type=int, nargs=2, default=(100, 1000),
                    help='tuple for training data range')
-    p.add_argument('--epochs', type=int, default=8)
+    p.add_argument('--epochs', type=int, default=10)
     p.add_argument('--batch_size', type=int, default=2048)
     p.add_argument('--lr', type=float, default=0.1)
     p.add_argument('--momentum', type=float, default=0.9)
