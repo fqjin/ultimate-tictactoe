@@ -5,12 +5,12 @@ from ab_model import NetABTree, load_ABnet
 from play import play
 
 
-best_net = 'drop0_19000bs2048lr0.1d0.001abe8'
+best_net = 'drop0_29000bs2048lr0.1d0.001abe8'
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
 def selfplayAB(number, player):
-    result, moves, evals = play(player, player, temp=(10, 0.2))
+    result, moves, evals = play(player, player, temp=(10, 1.0))
 
     savepath = '../selfplayAB/' + str(number).zfill(5)
 

@@ -128,7 +128,7 @@ class ABPlayer(BasePlayer):
         if invtemp:
             noise = np.random.rand(len(self.t.children))
             noise -= 0.5
-            noise /= (10 * invtemp)
+            noise /= invtemp
             for n, c in zip(noise, self.t.children):
                 c[2].v += n
 
