@@ -1,6 +1,7 @@
-nodes = 2800
+nodes = 4000
 depth = 5
-ab_games = 20
+ab_games = 40
+print(f'{nodes} nodes vs depth {depth}')
 
 import torch
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -18,13 +19,13 @@ p1 = ABPlayer(NetABTree, max_depth=depth, selfplay=False,
 from play import play
 r, m, e, t = play(p0, p1, verbose=True, temp=None, timing=True)
 np.savez(f'../games/net40k_{nodes}n_vs_AB{ab_games}k_d{depth}a',
-         result=r, moves=m, evals=e)
+         result=r, moves=m, evals=e, times=t)
 t0a = np.sum(t[::2])
 t1a = np.sum(t[1::2])
 
 r, m, e, t = play(p1, p0, verbose=True, temp=None, timing=True)
 np.savez(f'../games/net40k_{nodes}n_vs_AB{ab_games}k_d{depth}b',
-         result=r, moves=m, evals=e)
+         result=r, moves=m, evals=e, times=t)
 t1b = np.sum(t[::2])
 t0b = np.sum(t[1::2])
 
