@@ -27,6 +27,8 @@ if __name__ == '__main__':
         'init_ab',
         '1000_10000bs2048lr0.1d0.001abe5',
         'drop0_19000bs2048lr0.1d0.001abe8',
+        'drop0_29000bs2048lr0.1d0.001abe8',
+        'drop0_39000bs2048lr0.1d0.001abe8',
     ]
     if args.e:
         nets[-1] = nets[-1][:-1] + str(args.e)
@@ -36,5 +38,7 @@ if __name__ == '__main__':
         model_vs_model(nets[-1], nets[-3], device=device)
     elif args.flag == 2:
         model_vs_model(nets[-1], nets[-4], device=device)
+    elif args.flag == 3:
+        model_vs_model(nets[-1], nets[-5], device=device)
 
 
