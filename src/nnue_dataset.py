@@ -137,6 +137,7 @@ class NNUEGameDataset(Dataset):
             planes = []
             b = BigBoard()
             planes.append(board_to_nnue(b))
+            # TODO: profile loading and try batch board_to_nnue
             for m in moves[:-2]:
                 b.move(*m)
                 planes.append(board_to_nnue(b))
@@ -148,7 +149,7 @@ class NNUEGameDataset(Dataset):
         self.planes = torch.stack(self.planes).to(device)
         self.result = torch.tensor(self.result,
                                    dtype=torch.int64,
-                                   device=device).view(-1, 1)
+                                   device=device)
 
         self.transform_dict = make_transform_dict()
 
