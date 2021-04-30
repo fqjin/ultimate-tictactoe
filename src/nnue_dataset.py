@@ -37,6 +37,27 @@ def board_to_nnue(bigboard: BigBoard):
     return features
 
 
+def board_to_nnue_batch(legals, movers, boards, states):
+    features = torch.zeros(len(movers), 360)
+
+    legals = torch.tensor(legals).view(-1, 81)
+    movers = torch.tensor(movers).view(-1, 1)
+    features[:, 0:81] = legals * (1-movers)
+    features[:, 81:162] = legals * movers
+
+    boards = torch.tensor(boards).view(-1, 81)
+    features[:, 162:243] = (boards == 1)  # small X
+    features[:, 243:324] = (boards == 2)  # small O
+
+    states = torch.tensor(states).view(-1, 9)
+    features[:, 324:333] = (states == 0)  # empty
+    features[:, 333:342] = (states == 1)  # big X
+    features[:, 342:351] = (states == 2)  # big O
+    features[:, 351:360] = (states == 3)  # big T
+
+    return features
+
+
 def viz_feat(features):
     """Visualize binary feature vector"""
     import matplotlib.pyplot as plt
@@ -134,19 +155,24 @@ class NNUEGameDataset(Dataset):
             except KeyError:
                 raise KeyError('Selfplay game number not in selfplay zip')
 
-            planes = []
+            legals = []
+            movers = []
+            boards = []
+            states = []
             b = BigBoard()
-            planes.append(board_to_nnue(b))
-            # TODO: profile loading and try batch board_to_nnue
-            for m in moves[:-2]:
+            for m in moves[:-1]:
+                legals.append(b.legal_moves)
+                movers.append(b.mover)
+                boards.append(b.boards.copy())
+                states.append(b.states.copy())
                 b.move(*m)
-                planes.append(board_to_nnue(b))
+            planes = board_to_nnue_batch(legals, movers, boards, states)
             result = [WDL_dict[moves[-1, 0].item()]] * len(planes)
 
-            self.planes.extend(planes)
+            self.planes.append(planes)
             self.result.extend(result)
 
-        self.planes = torch.stack(self.planes).to(device)
+        self.planes = torch.cat(self.planes, dim=0).to(device)
         self.result = torch.tensor(self.result,
                                    dtype=torch.int64,
                                    device=device)
