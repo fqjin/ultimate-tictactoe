@@ -16,9 +16,9 @@ def board_to_nnue(bigboard: BigBoard):
                                           Total features: 360
 
     """
-    features = torch.zeros(360, dtype=torch.bool)
+    features = torch.zeros(360)
 
-    legal = torch.BoolTensor(bigboard.legal_moves).view(-1)
+    legal = torch.tensor(bigboard.legal_moves).view(-1)
     if not bigboard.mover:  # X to move
         features[0:81] = legal
     else:  # O to move
