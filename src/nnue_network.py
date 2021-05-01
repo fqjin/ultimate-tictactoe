@@ -46,6 +46,11 @@ class NNUE(nn.Module):
         x = self.linear3(x)
         return x, x_new
 
+    @staticmethod
+    def score_to_value(x):
+        wdl = torch.softmax(x, dim=1)
+        return wdl[:, 0] - wdl[:, 2]
+
 
 if __name__ == '__main__':
     for m in [
